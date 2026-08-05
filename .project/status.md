@@ -27,11 +27,13 @@
   - waiver target validation with explicit force override
   - detector catalog command
   - committed evaluation harness and first fixture
+  - quickstart and CI docs
 
 ## Known Broken
 
 - Git-correlation detectors are not implemented yet.
 - SARIF export is minimal and not yet schema-validated in tests.
 - Evaluation corpus is intentionally tiny and needs more fixtures.
+- Package is not published to npm yet.
 - MCP context packet compilation is planned but not implemented.
 - The local index is JSON-only and not yet a graph repository abstraction.

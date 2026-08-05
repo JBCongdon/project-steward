@@ -41,6 +41,8 @@ Then run:
 steward --help
 ```
 
+See [docs/quickstart.md](docs/quickstart.md) for first-run usage on another repository.
+
 ## Current commands
 
 ```sh
@@ -103,6 +105,8 @@ Project Steward can emit SARIF 2.1.0 for tools such as GitHub code scanning:
 ```sh
 steward audit --sarif > steward.sarif
 ```
+
+See [docs/ci.md](docs/ci.md) for CI usage.
 
 ## Product definition
 

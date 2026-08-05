@@ -23,11 +23,13 @@ Completed:
 - Waiver target validation with explicit force override
 - Detector catalog command
 - Evaluation harness and first golden fixture
+- Quickstart and CI docs
 - Basic tests
 - Public GitHub repository
 
 Next:
 - Add more evaluation fixtures for clean repos, baselines, and waivers
+- Add release automation and npm publishing decision
 - Open GitHub issues for the next S1 detector and SARIF/export work
 - Add schema validation for SARIF output
 - Add git-correlation detectors
