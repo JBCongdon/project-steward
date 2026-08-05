@@ -1,0 +1,43 @@
+{
+  "name": "project-steward",
+  "version": "0.1.0",
+  "description": "A vendor-neutral project intelligence layer for AI-assisted engineering.",
+  "type": "module",
+  "bin": {
+    "steward": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "mcp",
+    "adr",
+    "documentation",
+    "governance",
+    "devex"
+  ],
+  "author": "Joel C.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "yaml": "^2.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}
