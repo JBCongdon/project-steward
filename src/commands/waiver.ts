@@ -5,6 +5,7 @@ import {
   renewWaiver,
   waiverIsActive
 } from "../baseline.js";
+import { findFindingById } from "../audit.js";
 import type { Waiver } from "../types.js";
 
 export interface CommandResult {
@@ -16,7 +17,8 @@ export interface CommandResult {
 export async function waiverCommand(
   root: string,
   positionals: string[],
-  values: Map<string, string>
+  values: Map<string, string>,
+  flags: Set<string> = new Set()
 ): Promise<CommandResult> {
   const [action, id] = positionals;
 
@@ -33,6 +35,17 @@ export async function waiverCommand(
     const validation = validateAdd(id, values);
     if (!validation.ok) {
       return failure(validation.error);
+    }
+
+    if (!flags.has("force")) {
+      const finding = await findFindingById(root, id);
+      if (!finding) {
+        return {
+          ok: false,
+          text: `Finding not found in current audit: ${id}\nUse --force to record a waiver anyway.\n`,
+          data: { error: "finding not found", target: id }
+        };
+      }
     }
 
     const waiver = await addWaiver(root, validation.waiver);
@@ -162,7 +175,7 @@ function formatWaivers(waivers: Waiver[]): string {
 function usage(): string {
   return `Usage:
   steward waiver list [--json]
-  steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD>
+  steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD> [--force]
   steward waiver renew <finding-id> --expires <YYYY-MM-DD>
   steward waiver prune [--json]
 `;

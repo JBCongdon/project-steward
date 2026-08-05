@@ -71,6 +71,7 @@ SARIF export emits new, unwaived findings only. Baselined and waived findings re
 - A degraded run must never report a fully trustworthy "clean" result.
 - Legacy repos need baseline ratcheting: gate new drift first, burn down old drift deliberately, and report baseline age.
 - Waivers require a reason, owner, and expiry, and audit reports active vs. expired counts.
+- Waiver creation checks that the finding exists in the current audit unless `--force` is used.
 - Expired waivers can be pruned explicitly with `steward waiver prune`.
 - Generated project knowledge must remain inspectable, human-editable, and reversible.
 

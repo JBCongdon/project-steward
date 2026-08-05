@@ -4,6 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
 import { addWaiver, pruneExpiredWaivers, readWaivers, renewWaiver } from "../src/baseline.js";
+import { waiverCommand } from "../src/commands/waiver.js";
 import { rebuildIndex } from "../src/indexer.js";
 import { createProjectLayout } from "../src/layout.js";
 import { formatSarif } from "../src/sarif.js";
@@ -182,6 +183,34 @@ describe("audit", () => {
       fs.access(path.join(root, ".project", "waivers.json"))
     ).rejects.toThrow();
     expect(pruned).toEqual({ kept: [], pruned: [] });
+  });
+
+  it("refuses to add a waiver for an unknown finding unless forced", async () => {
+    const root = await tempProject();
+
+    const rejected = await waiverCommand(
+      root,
+      ["add", "STW-NOTFOUND"],
+      new Map([
+        ["reason", "Typo test."],
+        ["owner", "test"],
+        ["expires", "2999-01-01"]
+      ])
+    );
+    const forced = await waiverCommand(
+      root,
+      ["add", "STW-NOTFOUND"],
+      new Map([
+        ["reason", "Offline waiver."],
+        ["owner", "test"],
+        ["expires", "2999-01-01"]
+      ]),
+      new Set(["force"])
+    );
+
+    expect(rejected.ok).toBe(false);
+    expect(rejected.text).toContain("Finding not found");
+    expect(forced.ok).toBe(true);
   });
 
   it("reports ADRs missing required sections", async () => {

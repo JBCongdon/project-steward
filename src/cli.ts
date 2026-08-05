@@ -109,7 +109,12 @@ async function main(): Promise<void> {
     }
 
     case "waiver": {
-      const result = await waiverCommand(parsed.root, parsed.positionals, parsed.values);
+      const result = await waiverCommand(
+        parsed.root,
+        parsed.positionals,
+        parsed.values,
+        parsed.flags
+      );
       if (parsed.flags.has("json")) {
         printJson(result.data);
       } else {
@@ -198,7 +203,7 @@ Usage:
   steward status
   steward explain finding <id>
   steward waiver list [--json]
-  steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD>
+  steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD> [--force]
   steward waiver renew <finding-id> --expires <YYYY-MM-DD>
   steward waiver prune [--json]
 

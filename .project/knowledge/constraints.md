@@ -16,3 +16,4 @@
 - Invalid policy configuration must emit findings rather than crashing audit.
 - Expired waivers must be removed only by explicit command.
 - Markdown link checking must validate heading anchors for Markdown targets.
+- Waiver creation must reject unknown current-audit findings unless explicitly forced.

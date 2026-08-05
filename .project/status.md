@@ -24,6 +24,7 @@
   - waiver renew/prune commands
   - policy configuration detector
   - Markdown heading-anchor validation
+  - waiver target validation with explicit force override
 
 ## Known Broken
 

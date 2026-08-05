@@ -20,6 +20,7 @@ Completed:
 - Waiver renew/prune commands
 - Policy configuration detector
 - Markdown heading-anchor validation
+- Waiver target validation with explicit force override
 - Basic tests
 - Public GitHub repository
 
