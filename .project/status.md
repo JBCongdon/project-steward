@@ -31,6 +31,7 @@
   - shallow git clone degraded-mode detection
   - required project-record git tracking detector
   - policy-driven path exclusions
+  - baseline status/clear command
 
 ## Known Broken
 

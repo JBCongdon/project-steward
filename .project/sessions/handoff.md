@@ -27,6 +27,7 @@ Completed:
 - Shallow git clone degraded-mode detection
 - Required project-record git tracking detector
 - Policy-driven path exclusions
+- Baseline status/clear command
 - Basic tests
 - Public GitHub repository
 

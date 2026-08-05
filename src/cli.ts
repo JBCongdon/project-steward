@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import path from "node:path";
 import { runAudit, checkDriftBudget } from "./audit.js";
+import { baselineCommand } from "./commands/baseline.js";
 import { detectorsCommand } from "./commands/detectors.js";
 import { doctorCommand } from "./commands/doctor.js";
 import { evalCommand } from "./commands/eval.js";
@@ -44,6 +45,17 @@ async function main(): Promise<void> {
       const result = await doctorCommand(parsed.root);
       if (parsed.flags.has("json")) {
         printJson(result);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "baseline": {
+      const result = await baselineCommand(parsed.root, parsed.positionals, parsed.flags);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
       } else {
         process.stdout.write(result.text);
       }
@@ -220,6 +232,8 @@ function helpText(): string {
 Usage:
   steward init [--root <path>]
   steward doctor [--json]
+  steward baseline status [--json]
+  steward baseline clear --force [--json]
   steward detectors [--json]
   steward eval [--json] [--fixtures <path>]
   steward rebuild [--json]

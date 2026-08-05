@@ -36,6 +36,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add shallow git clone degraded-mode detection
 - [x] Add required project-record git tracking detector
 - [x] Add policy-driven path exclusions
+- [x] Add baseline status/clear command
 
 ## Required Evidence
 

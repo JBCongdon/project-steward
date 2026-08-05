@@ -5,6 +5,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
 import { addWaiver, pruneExpiredWaivers, readWaivers, renewWaiver } from "../src/baseline.js";
+import { baselineCommand } from "../src/commands/baseline.js";
 import { detectorsCommand } from "../src/commands/detectors.js";
 import { waiverCommand } from "../src/commands/waiver.js";
 import { rebuildIndex } from "../src/indexer.js";
@@ -115,6 +116,28 @@ describe("audit", () => {
     );
     expect(report.baseline?.findingCount).toBe(report.findings.length);
     expect(report.baseline?.ageDays).toBe(0);
+  });
+
+  it("reports and clears baseline through the baseline command", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, "README.md"),
+      "See [missing docs](docs/missing.md).\n",
+      "utf8"
+    );
+    await runAudit(root, { acceptBaseline: true });
+
+    const status = await baselineCommand(root, ["status"]);
+    const rejectedClear = await baselineCommand(root, ["clear"]);
+    const clear = await baselineCommand(root, ["clear"], new Set(["force"]));
+    const emptyStatus = await baselineCommand(root, ["status"]);
+
+    expect(status.text).toContain("Baseline:");
+    expect(rejectedClear.ok).toBe(false);
+    expect(rejectedClear.text).toContain("--force");
+    expect(clear.ok).toBe(true);
+    expect(clear.data).toEqual({ cleared: true });
+    expect(emptyStatus.text).toBe("No baseline recorded.\n");
   });
 
   it("fails check when coverage is degraded outside git", async () => {

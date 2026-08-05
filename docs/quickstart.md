@@ -23,6 +23,7 @@ For a legacy repository with existing findings:
 ```sh
 steward audit
 steward audit --accept-baseline
+steward baseline status
 steward check
 ```
 
@@ -32,6 +33,7 @@ Useful commands:
 
 ```sh
 steward detectors
+steward baseline status
 steward audit --json
 steward audit --sarif > steward.sarif
 steward explain finding <id>

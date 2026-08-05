@@ -23,6 +23,8 @@ Repository files are scanned by deterministic detectors. Findings are enriched w
 
 Audit reports baseline finding count and baseline age when `.project/audit-baseline.json` exists. Decision coverage counts ADR files only; `.project/decisions/index.md` is a project index, not a decision record.
 
+`steward baseline status` inspects the accepted baseline. `steward baseline clear --force` removes it explicitly.
+
 The current deterministic detector set covers required layout files, git tracking for required project records, policy configuration, relative Markdown links and heading anchors, ADR quality, and plan lifecycle state.
 
 `steward detectors` lists the detector catalog with policy enabled/disabled state.

@@ -49,12 +49,14 @@ See [docs/quickstart.md](docs/quickstart.md) for first-run usage on another repo
 ```sh
 steward init
 steward doctor
+steward baseline status
 steward detectors
 steward eval
 steward rebuild
 steward audit
 steward audit --sarif > steward.sarif
 steward audit --accept-baseline
+steward baseline clear --force
 steward check
 steward check --sarif > steward.sarif
 steward status

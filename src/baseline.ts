@@ -1,6 +1,7 @@
 import path from "node:path";
+import fs from "node:fs/promises";
 import { PROJECT_DIR } from "./constants.js";
-import { readJson, writeJson } from "./fsx.js";
+import { exists, readJson, writeJson } from "./fsx.js";
 import type { AuditBaseline, Finding, Waiver } from "./types.js";
 
 export function baselinePath(root: string): string {
@@ -13,6 +14,16 @@ export function waiversPath(root: string): string {
 
 export async function readBaseline(root: string): Promise<AuditBaseline | undefined> {
   return readJson<AuditBaseline>(baselinePath(root));
+}
+
+export async function clearBaseline(root: string): Promise<boolean> {
+  const target = baselinePath(root);
+  if (!(await exists(target))) {
+    return false;
+  }
+
+  await fs.rm(target);
+  return true;
 }
 
 export async function writeBaseline(
