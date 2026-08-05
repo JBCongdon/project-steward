@@ -23,6 +23,7 @@ The index is a cache, not authority. The committed `.project/` directory and the
 - `src/detectors`: read-only finding producers
 - `src/indexer.ts`: rebuildable project index
 - `src/audit.ts`: detector orchestration, baseline handling, policy budgets
+- `src/baseline.ts`: audit baseline and waiver persistence
 - `src/layout.ts`: `.project/` layout creation and validation
 
 ## Future Interfaces

@@ -8,3 +8,4 @@
 - `.steward/` must remain gitignored.
 - JSON output is the primary machine contract.
 - Model-assisted findings must not gate CI by default when introduced.
+- Waivers must require a reason, owner, and expiry.

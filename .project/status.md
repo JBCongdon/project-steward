@@ -13,10 +13,12 @@
   - finding explanations
   - tests and contribution docs
   - public GitHub repository
+  - waiver CLI
+  - ADR quality detector
 
 ## Known Broken
 
 - Git-correlation detectors are not implemented yet.
-- Waiver creation is not exposed as a CLI command yet.
+- Waiver expiry reporting is minimal.
 - MCP context packet compilation is planned but not implemented.
 - The local index is JSON-only and not yet a graph repository abstraction.

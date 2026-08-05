@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
+import { addWaiver } from "../src/baseline.js";
 import { createProjectLayout } from "../src/layout.js";
 
 describe("audit", () => {
@@ -50,6 +51,57 @@ describe("audit", () => {
 
     expect(result.passed).toBe(false);
     expect(result.report.degraded.length).toBeGreaterThan(0);
+  });
+
+  it("marks active waivers without removing the underlying finding", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, "README.md"),
+      "See [missing docs](docs/missing.md).\n",
+      "utf8"
+    );
+
+    const first = await runAudit(root);
+    const finding = first.findings.find(
+      (candidate) => candidate.detectorId === "markdown-links"
+    );
+    expect(finding).toBeDefined();
+
+    await addWaiver(root, {
+      id: finding!.id,
+      reason: "Fixture intentionally links to a missing target.",
+      owner: "test",
+      expires: "2999-01-01"
+    });
+
+    const second = await runAudit(root);
+    const waived = second.findings.find((candidate) => candidate.id === finding!.id);
+
+    expect(waived?.status).toBe("waived");
+  });
+
+  it("reports ADRs missing required sections", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, ".project", "decisions", "ADR-0002-thin-record.md"),
+      "# ADR-0002: Thin record\n\nStatus: Accepted\n\n## Context\n\nTiny.\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+    const adrFindings = report.findings.filter(
+      (finding) => finding.detectorId === "adr-quality"
+    );
+
+    expect(adrFindings.map((finding) => finding.message)).toContain(
+      ".project/decisions/ADR-0002-thin-record.md is missing the Decision section."
+    );
+    expect(adrFindings.map((finding) => finding.message)).toContain(
+      ".project/decisions/ADR-0002-thin-record.md is missing the Consequences section."
+    );
+    expect(adrFindings.map((finding) => finding.message)).toContain(
+      ".project/decisions/ADR-0002-thin-record.md is missing the Rollback section."
+    );
   });
 });
 

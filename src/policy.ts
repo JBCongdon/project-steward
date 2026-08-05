@@ -8,7 +8,8 @@ import type { StewardPolicy } from "./types.js";
 export const DEFAULT_POLICY: StewardPolicy = {
   detectors: {
     "project-layout": true,
-    "markdown-links": true
+    "markdown-links": true,
+    "adr-quality": true
   },
   drift_budget: {
     high_confidence_findings_max: 0,

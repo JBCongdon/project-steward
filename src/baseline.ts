@@ -35,6 +35,16 @@ export async function readWaivers(root: string): Promise<Waiver[]> {
   return (await readJson<Waiver[]>(waiversPath(root))) ?? [];
 }
 
+export async function addWaiver(root: string, waiver: Waiver): Promise<Waiver> {
+  const waivers = await readWaivers(root);
+  const next = [...waivers, waiver].sort((left, right) =>
+    `${left.id ?? left.fingerprint}`.localeCompare(`${right.id ?? right.fingerprint}`)
+  );
+
+  await writeJson(waiversPath(root), next);
+  return waiver;
+}
+
 export function applyFindingStatuses(
   findings: Finding[],
   baseline: AuditBaseline | undefined,

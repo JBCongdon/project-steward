@@ -5,6 +5,7 @@ import { doctorCommand } from "./commands/doctor.js";
 import { explainFindingCommand } from "./commands/explain.js";
 import { initCommand } from "./commands/init.js";
 import { statusCommand } from "./commands/status.js";
+import { waiverCommand } from "./commands/waiver.js";
 import { VERSION } from "./constants.js";
 import { rebuildIndex } from "./indexer.js";
 import { formatAudit, formatIndex, printJson } from "./output.js";
@@ -13,6 +14,7 @@ interface ParsedArgs {
   command?: string;
   positionals: string[];
   flags: Set<string>;
+  values: Map<string, string>;
   root: string;
 }
 
@@ -101,6 +103,17 @@ async function main(): Promise<void> {
       return;
     }
 
+    case "waiver": {
+      const result = await waiverCommand(parsed.root, parsed.positionals, parsed.values);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
     default:
       process.stderr.write(`Unknown command: ${parsed.command}\n\n${helpText()}`);
       process.exitCode = 1;
@@ -109,8 +122,10 @@ async function main(): Promise<void> {
 
 function parseArgs(args: string[]): ParsedArgs {
   const flags = new Set<string>();
+  const values = new Map<string, string>();
   const positionals: string[] = [];
   let root = process.cwd();
+  const valueFlags = new Set(["owner", "reason", "expires"]);
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -126,7 +141,24 @@ function parseArgs(args: string[]): ParsedArgs {
     }
 
     if (arg.startsWith("--")) {
-      flags.add(arg.slice(2));
+      const [rawName, inlineValue] = arg.slice(2).split("=", 2);
+      const name = rawName;
+      const next = args[index + 1];
+
+      if (inlineValue !== undefined) {
+        values.set(name, inlineValue);
+        flags.add(name);
+        continue;
+      }
+
+      if (valueFlags.has(name) && next && !next.startsWith("-")) {
+        values.set(name, next);
+        flags.add(name);
+        index += 1;
+        continue;
+      }
+
+      flags.add(name);
       continue;
     }
 
@@ -144,6 +176,7 @@ function parseArgs(args: string[]): ParsedArgs {
     command: positionals.shift(),
     positionals,
     flags,
+    values,
     root
   };
 }
@@ -159,6 +192,8 @@ Usage:
   steward check [--json]
   steward status
   steward explain finding <id>
+  steward waiver list [--json]
+  steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD>
 
 Project Steward is a vendor-neutral project intelligence layer for AI-assisted engineering.
 `;

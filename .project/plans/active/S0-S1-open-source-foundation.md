@@ -18,6 +18,8 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Implement CI-style `check`
 - [x] Add tests for determinism and baseline behavior
 - [x] Publish public GitHub repository
+- [x] Add waiver CLI
+- [x] Add ADR quality detector
 
 ## Required Evidence
 

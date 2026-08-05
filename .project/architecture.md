@@ -6,6 +6,7 @@
 
 - `src/cli.ts`: command routing and process exit behavior
 - `src/audit.ts`: detector orchestration, baseline handling, coverage summary, check budgets
+- `src/baseline.ts`: accepted baseline and waiver persistence
 - `src/detectors`: deterministic read-only detectors
 - `src/indexer.ts`: rebuildable local index writer
 - `src/layout.ts`: committed `.project/` layout creation and validation
@@ -16,6 +17,10 @@
 ### Audit
 
 Repository files are scanned by deterministic detectors. Findings are enriched with evidence, confidence, impact, reversibility, and approval metadata. Baseline and waiver records are applied after detection so raw detector behavior stays reproducible.
+
+### Waiver
+
+`steward waiver add` records a suppression in `.project/waivers.json`. Waivers require a reason, owner, and expiry date. Audit still emits the underlying finding, but marks it `waived` while the waiver is active.
 
 ### Check
 

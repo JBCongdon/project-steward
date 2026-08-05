@@ -44,6 +44,8 @@ steward audit --accept-baseline
 steward check
 steward status
 steward explain finding <id>
+steward waiver list
+steward waiver add <finding-id> --reason "why" --owner "name" --expires 2026-12-31
 ```
 
 All command output supports `--json` where useful.
@@ -54,6 +56,7 @@ All command output supports `--json` where useful.
 - Every finding carries evidence, confidence, and a deterministic fingerprint.
 - A degraded run must never report a fully trustworthy "clean" result.
 - Legacy repos need baseline ratcheting: gate new drift first, burn down old drift deliberately.
+- Waivers require a reason, owner, and expiry.
 - Generated project knowledge must remain inspectable, human-editable, and reversible.
 
 ## Roadmap
