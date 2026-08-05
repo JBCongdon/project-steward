@@ -26,6 +26,7 @@ The index is a cache, not authority. The committed `.project/` directory and the
 - `src/baseline.ts`: audit baseline and waiver persistence
 - `src/records.ts`: shared record classification helpers such as ADR filename recognition
 - `src/sarif.ts`: SARIF rendering for new unwaived findings
+- `src/evalHarness.ts`: committed fixture evaluation harness
 - `src/layout.ts`: `.project/` layout creation and validation
 
 ## Current Detectors

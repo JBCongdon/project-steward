@@ -22,6 +22,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
+    "eval": "node dist/cli.js eval",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "npm run build"

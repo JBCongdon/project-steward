@@ -3,6 +3,7 @@ import path from "node:path";
 import { runAudit, checkDriftBudget } from "./audit.js";
 import { detectorsCommand } from "./commands/detectors.js";
 import { doctorCommand } from "./commands/doctor.js";
+import { evalCommand } from "./commands/eval.js";
 import { explainFindingCommand } from "./commands/explain.js";
 import { initCommand } from "./commands/init.js";
 import { statusCommand } from "./commands/status.js";
@@ -57,6 +58,17 @@ async function main(): Promise<void> {
       } else {
         process.stdout.write(result.text);
       }
+      return;
+    }
+
+    case "eval": {
+      const result = await evalCommand(parsed.root, parsed.values.get("fixtures"));
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
       return;
     }
 
@@ -146,7 +158,7 @@ function parseArgs(args: string[]): ParsedArgs {
   const values = new Map<string, string>();
   const positionals: string[] = [];
   let root = process.cwd();
-  const valueFlags = new Set(["owner", "reason", "expires"]);
+  const valueFlags = new Set(["owner", "reason", "expires", "fixtures"]);
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -209,6 +221,7 @@ Usage:
   steward init [--root <path>]
   steward doctor [--json]
   steward detectors [--json]
+  steward eval [--json] [--fixtures <path>]
   steward rebuild [--json]
   steward audit [--json|--sarif] [--accept-baseline]
   steward check [--json|--sarif]

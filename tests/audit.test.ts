@@ -9,6 +9,7 @@ import { waiverCommand } from "../src/commands/waiver.js";
 import { rebuildIndex } from "../src/indexer.js";
 import { createProjectLayout } from "../src/layout.js";
 import { formatSarif } from "../src/sarif.js";
+import { runEvaluation } from "../src/evalHarness.js";
 
 describe("audit", () => {
   it("reports broken relative markdown links with stable ids", async () => {
@@ -317,6 +318,13 @@ describe("audit", () => {
     expect(planState?.enabled).toBe(false);
     expect(markdownLinks?.enabled).toBe(true);
     expect(result.text).toContain("disabled plan-state");
+  });
+
+  it("passes committed evaluation fixtures", async () => {
+    const result = await runEvaluation(process.cwd());
+
+    expect(result.passed).toBe(true);
+    expect(result.fixtures.length).toBeGreaterThan(0);
   });
 
   it("exports only new unwaived findings to SARIF", async () => {

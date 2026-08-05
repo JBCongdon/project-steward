@@ -9,6 +9,7 @@
 - `src/baseline.ts`: accepted baseline and waiver persistence
 - `src/detectors`: deterministic read-only detectors
 - `src/sarif.ts`: SARIF export renderer
+- `src/evalHarness.ts`: committed fixture evaluation harness
 - `src/records.ts`: shared project-record classification helpers
 - `src/indexer.ts`: rebuildable local index writer
 - `src/layout.ts`: committed `.project/` layout creation and validation
@@ -25,6 +26,12 @@ Audit reports baseline finding count and baseline age when `.project/audit-basel
 The current deterministic detector set covers required layout files, policy configuration, relative Markdown links and heading anchors, ADR quality, and plan lifecycle state.
 
 `steward detectors` lists the detector catalog with policy enabled/disabled state.
+
+### Evaluation
+
+`steward eval` runs committed fixtures from `fixtures/evaluation` and compares exact expected findings against audit output. CI runs the harness after build.
+
+Normal audit skips the top-level `fixtures/` directory. Evaluation audits each fixture as its own root so intentional drift fixtures do not pollute the repository's own audit.
 
 ### Waiver
 

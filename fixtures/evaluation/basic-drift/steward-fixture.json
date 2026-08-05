@@ -1,0 +1,25 @@
+{
+  "name": "basic drift",
+  "expectedFindings": [
+    {
+      "detectorId": "markdown-links",
+      "message": "README.md links to missing anchor #missing-heading in docs/guide.md#missing-heading."
+    },
+    {
+      "detectorId": "adr-quality",
+      "message": ".project/decisions/ADR-0001-thin-record.md is missing the Consequences section."
+    },
+    {
+      "detectorId": "adr-quality",
+      "message": ".project/decisions/ADR-0001-thin-record.md is missing the Rollback section."
+    },
+    {
+      "detectorId": "plan-state",
+      "message": ".project/plans/active/completed-work.md is in .project/plans/active but declares Status: Completed."
+    },
+    {
+      "detectorId": "policy-config",
+      "message": "detectors.not-a-detector is not a known detector id."
+    }
+  ]
+}

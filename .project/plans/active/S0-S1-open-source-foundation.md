@@ -31,12 +31,14 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Validate Markdown heading anchors
 - [x] Validate waiver targets by default
 - [x] Add detector catalog command
+- [x] Add committed evaluation harness and first fixture
 
 ## Required Evidence
 
 - `npm run check`
 - `npm test`
 - `npm run build`
+- `npm run eval`
 - `steward audit`
 - `gh repo create project-steward --public --source=. --remote=origin --push`
 - `steward audit --sarif`

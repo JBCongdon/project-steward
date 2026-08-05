@@ -47,6 +47,7 @@ steward --help
 steward init
 steward doctor
 steward detectors
+steward eval
 steward rebuild
 steward audit
 steward audit --sarif > steward.sarif
@@ -65,6 +66,8 @@ All command output supports `--json` where useful.
 
 Use `steward detectors` to inspect available detectors and whether policy currently enables them.
 
+Use `steward eval` to run the committed detector evaluation fixtures.
+
 SARIF export emits new, unwaived findings only. Baselined and waived findings remain visible in `steward audit --json`, but are left out of SARIF so first adoption does not flood code-scanning tools with accepted legacy drift.
 
 ## Core ideas
@@ -81,6 +84,17 @@ SARIF export emits new, unwaived findings only. Baselined and waived findings re
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md).
+
+## Evaluation
+
+Detector behavior is checked against committed fixtures:
+
+```sh
+npm run build
+npm run eval
+```
+
+See [docs/evaluation.md](docs/evaluation.md).
 
 ## Interoperability
 

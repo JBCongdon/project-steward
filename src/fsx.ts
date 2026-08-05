@@ -5,6 +5,7 @@ import path from "node:path";
 const DEFAULT_IGNORES = new Set([
   ".git",
   ".steward",
+  "fixtures",
   "node_modules",
   "dist",
   "coverage"

@@ -22,10 +22,12 @@ Completed:
 - Markdown heading-anchor validation
 - Waiver target validation with explicit force override
 - Detector catalog command
+- Evaluation harness and first golden fixture
 - Basic tests
 - Public GitHub repository
 
 Next:
+- Add more evaluation fixtures for clean repos, baselines, and waivers
 - Open GitHub issues for the next S1 detector and SARIF/export work
 - Add schema validation for SARIF output
 - Add git-correlation detectors
