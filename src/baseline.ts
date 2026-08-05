@@ -59,6 +59,34 @@ export function summarizeWaivers(
   };
 }
 
+export function summarizeBaseline(
+  baseline: AuditBaseline | undefined,
+  now = new Date()
+):
+  | {
+      acceptedAt: string;
+      baselineCommit: string;
+      findingCount: number;
+      ageDays: number;
+    }
+  | undefined {
+  if (!baseline) {
+    return undefined;
+  }
+
+  const acceptedAt = Date.parse(baseline.acceptedAt);
+  const ageDays = Number.isFinite(acceptedAt)
+    ? Math.max(0, Math.floor((now.getTime() - acceptedAt) / 86_400_000))
+    : 0;
+
+  return {
+    acceptedAt: baseline.acceptedAt,
+    baselineCommit: baseline.baselineCommit,
+    findingCount: baseline.fingerprints.length,
+    ageDays
+  };
+}
+
 export function applyFindingStatuses(
   findings: Finding[],
   baseline: AuditBaseline | undefined,

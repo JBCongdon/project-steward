@@ -85,6 +85,7 @@ export function formatSarif(report: AuditReport): SarifLog {
               generatedAt: report.generatedAt,
               degraded: report.degraded,
               coverage: report.coverage,
+              baseline: report.baseline,
               waivers: report.waivers,
               exportScope: "new-unwaived-findings"
             }

@@ -4,6 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
 import { addWaiver } from "../src/baseline.js";
+import { rebuildIndex } from "../src/indexer.js";
 import { createProjectLayout } from "../src/layout.js";
 import { formatSarif } from "../src/sarif.js";
 
@@ -44,6 +45,8 @@ describe("audit", () => {
     expect(report.findings.every((finding) => finding.status === "baseline")).toBe(
       true
     );
+    expect(report.baseline?.findingCount).toBe(report.findings.length);
+    expect(report.baseline?.ageDays).toBe(0);
   });
 
   it("fails check when coverage is degraded outside git", async () => {
@@ -52,6 +55,18 @@ describe("audit", () => {
 
     expect(result.passed).toBe(false);
     expect(result.report.degraded.length).toBeGreaterThan(0);
+  });
+
+  it("does not count decisions/index.md as an ADR", async () => {
+    const root = await tempProject();
+    const report = await runAudit(root);
+    const index = await rebuildIndex(root);
+
+    expect(report.coverage.decisions).toBe(0);
+    expect(index.decisions).toHaveLength(0);
+    expect(index.documents.find((document) => document.path === ".project/decisions/index.md")?.kind).toBe(
+      "project"
+    );
   });
 
   it("marks active waivers without removing the underlying finding", async () => {

@@ -5,6 +5,7 @@ import {
   readWaivers,
   writeBaseline,
   applyFindingStatuses,
+  summarizeBaseline,
   summarizeWaivers
 } from "./baseline.js";
 import { DETECTORS } from "./detectors/index.js";
@@ -13,6 +14,7 @@ import { exists, walkFiles } from "./fsx.js";
 import { getGitInfo } from "./git.js";
 import { requiredProjectFileStatus } from "./layout.js";
 import { loadPolicy } from "./policy.js";
+import { isAdrPath } from "./records.js";
 import type { AuditReport, Finding } from "./types.js";
 
 export interface AuditOptions {
@@ -55,11 +57,12 @@ export async function runAudit(
     degraded,
     coverage: {
       markdownFilesScanned: await countMarkdownFiles(root),
-      decisions: await countMarkdownRecords(root, ".project/decisions"),
+      decisions: await countMarkdownRecords(root, ".project/decisions", isAdrPath),
       activePlans: await countMarkdownRecords(root, ".project/plans/active"),
       requiredProjectFilesPresent: projectStatus.present.length,
       requiredProjectFilesTotal: REQUIRED_PROJECT_FILES.length
     },
+    baseline: summarizeBaseline(baseline),
     waivers: summarizeWaivers(waivers),
     findings
   };
@@ -106,11 +109,17 @@ export async function findFindingById(
   );
 }
 
-async function countMarkdownRecords(root: string, relativeDirectory: string): Promise<number> {
+async function countMarkdownRecords(
+  root: string,
+  relativeDirectory: string,
+  predicate: (relativePath: string) => boolean = () => true
+): Promise<number> {
   const absolute = path.join(root, relativeDirectory);
   if (!(await exists(absolute))) {
     return 0;
   }
 
-  return (await walkFiles(absolute, { extensions: [".md"], includeHidden: true })).length;
+  return (await walkFiles(absolute, { extensions: [".md"], includeHidden: true })).filter(
+    predicate
+  ).length;
 }

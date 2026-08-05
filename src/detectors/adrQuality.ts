@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createFinding } from "../finding.js";
 import { exists, toPosix, walkFiles } from "../fsx.js";
+import { isAdrPath } from "../records.js";
 import type { Detector, Finding } from "../types.js";
 
 const REQUIRED_SECTIONS = ["Context", "Decision", "Consequences", "Rollback"];
@@ -18,7 +19,7 @@ export const adrQualityDetector: Detector = {
     const files = (await walkFiles(decisionsDir, {
       extensions: [".md"],
       includeHidden: true
-    })).filter((relative) => /^ADR-\d{4}-.+\.md$/.test(path.basename(relative)));
+    })).filter(isAdrPath);
 
     const findings: Finding[] = [];
 

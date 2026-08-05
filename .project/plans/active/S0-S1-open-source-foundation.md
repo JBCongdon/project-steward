@@ -22,6 +22,8 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add ADR quality detector
 - [x] Add SARIF export for new findings
 - [x] Report active and expired waiver counts
+- [x] Report audit baseline age
+- [x] Count only ADR files as decision records
 
 ## Required Evidence
 

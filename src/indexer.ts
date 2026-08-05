@@ -3,6 +3,7 @@ import path from "node:path";
 import { PROJECT_DIR, STEWARD_DIR } from "./constants.js";
 import { ensureDir, exists, toPosix, walkFiles, writeJson } from "./fsx.js";
 import { getGitInfo } from "./git.js";
+import { isAdrPath } from "./records.js";
 import type { ProjectIndex } from "./types.js";
 
 export async function rebuildIndex(root: string): Promise<ProjectIndex> {
@@ -17,7 +18,9 @@ export async function rebuildIndex(root: string): Promise<ProjectIndex> {
     kind: classifyDocument(relative)
   }));
 
-  const decisions = await collectRecords(root, ".project/decisions", "decision");
+  const decisions = (
+    await collectRecords(root, ".project/decisions", "decision")
+  ).filter((record) => isAdrPath(record.path));
   const plans = [
     ...(await collectRecords(root, ".project/plans/active", "active")),
     ...(await collectRecords(root, ".project/plans/completed", "completed")),
@@ -77,7 +80,7 @@ function classifyDocument(relative: string): string {
   const normalized = toPosix(relative);
 
   if (normalized.startsWith(`${PROJECT_DIR}/decisions/`)) {
-    return "decision";
+    return isAdrPath(normalized) ? "decision" : "project";
   }
 
   if (normalized.startsWith(`${PROJECT_DIR}/plans/`)) {

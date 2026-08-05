@@ -10,3 +10,5 @@
 - Model-assisted findings must not gate CI by default when introduced.
 - Waivers must require a reason, owner, and expiry.
 - SARIF export must not include baselined or waived findings by default.
+- Decision coverage must count ADR files, not decision directory indexes.
+- Audit output must report baseline age when a baseline exists.

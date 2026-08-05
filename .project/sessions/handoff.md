@@ -13,6 +13,8 @@ Completed:
 - ADR quality detector
 - SARIF export
 - Waiver health reporting
+- Baseline age reporting
+- ADR-only decision coverage
 - Basic tests
 - Public GitHub repository
 
@@ -20,4 +22,5 @@ Next:
 - Open GitHub issues for the next S1 detector and SARIF/export work
 - Add schema validation for SARIF output
 - Add waiver prune/renew commands
+- Add git-correlation detectors
 - Add release automation when the CLI contract settles

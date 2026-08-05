@@ -17,6 +17,8 @@
   - ADR quality detector
   - SARIF export for new findings
   - active/expired waiver reporting
+  - baseline age reporting
+  - accurate ADR-only decision coverage
 
 ## Known Broken
 

@@ -9,6 +9,7 @@
 - `src/baseline.ts`: accepted baseline and waiver persistence
 - `src/detectors`: deterministic read-only detectors
 - `src/sarif.ts`: SARIF export renderer
+- `src/records.ts`: shared project-record classification helpers
 - `src/indexer.ts`: rebuildable local index writer
 - `src/layout.ts`: committed `.project/` layout creation and validation
 - `src/policy.ts`: policy loading and defaults
@@ -18,6 +19,8 @@
 ### Audit
 
 Repository files are scanned by deterministic detectors. Findings are enriched with evidence, confidence, impact, reversibility, and approval metadata. Baseline and waiver records are applied after detection so raw detector behavior stays reproducible.
+
+Audit reports baseline finding count and baseline age when `.project/audit-baseline.json` exists. Decision coverage counts ADR files only; `.project/decisions/index.md` is a project index, not a decision record.
 
 ### Waiver
 

@@ -80,6 +80,12 @@ export interface AuditReport {
     requiredProjectFilesPresent: number;
     requiredProjectFilesTotal: number;
   };
+  baseline?: {
+    acceptedAt: string;
+    baselineCommit: string;
+    findingCount: number;
+    ageDays: number;
+  };
   waivers: {
     total: number;
     active: number;

@@ -24,6 +24,7 @@ The index is a cache, not authority. The committed `.project/` directory and the
 - `src/indexer.ts`: rebuildable project index
 - `src/audit.ts`: detector orchestration, baseline handling, policy budgets
 - `src/baseline.ts`: audit baseline and waiver persistence
+- `src/records.ts`: shared record classification helpers such as ADR filename recognition
 - `src/sarif.ts`: SARIF rendering for new unwaived findings
 - `src/layout.ts`: `.project/` layout creation and validation
 

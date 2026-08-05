@@ -1,14 +1,17 @@
-import { readBaseline } from "../baseline.js";
 import { runAudit } from "../audit.js";
 
 export async function statusCommand(root: string): Promise<string> {
-  const [baseline, report] = await Promise.all([readBaseline(root), runAudit(root)]);
+  const report = await runAudit(root);
   const newFindings = report.findings.filter((finding) => finding.status === "new");
 
   return [
     "Project Steward status",
     `commit: ${report.baselineCommit}`,
-    `baseline: ${baseline ? `${baseline.fingerprints.length} finding(s) accepted at ${baseline.baselineCommit}` : "none"}`,
+    `baseline: ${
+      report.baseline
+        ? `${report.baseline.findingCount} finding(s), ${report.baseline.ageDays} day(s) old at ${report.baseline.baselineCommit}`
+        : "none"
+    }`,
     `new findings: ${newFindings.length}`,
     `waivers: ${report.waivers.active} active, ${report.waivers.expired} expired`,
     `degraded coverage: ${report.degraded.length}`,

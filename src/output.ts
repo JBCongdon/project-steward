@@ -20,6 +20,13 @@ export function formatAudit(report: AuditReport): string {
     `coverage: ${report.coverage.markdownFilesScanned} markdown files, ${report.coverage.decisions} decisions, ${report.coverage.activePlans} active plans`
   );
   lines.push(
+    `baseline: ${
+      report.baseline
+        ? `${report.baseline.findingCount} finding(s), ${report.baseline.ageDays} day(s) old`
+        : "none"
+    }`
+  );
+  lines.push(
     `waivers: ${report.waivers.active} active, ${report.waivers.expired} expired`
   );
 
