@@ -21,11 +21,12 @@
   - accurate ADR-only decision coverage
   - plan lifecycle detector
   - GitHub issue and PR templates
+  - waiver renew/prune commands
+  - policy configuration detector
 
 ## Known Broken
 
 - Git-correlation detectors are not implemented yet.
-- Waiver pruning is not exposed as a CLI command yet.
 - SARIF export is minimal and not yet schema-validated in tests.
 - MCP context packet compilation is planned but not implemented.
 - The local index is JSON-only and not yet a graph repository abstraction.

@@ -45,6 +45,40 @@ export async function addWaiver(root: string, waiver: Waiver): Promise<Waiver> {
   return waiver;
 }
 
+export async function renewWaiver(
+  root: string,
+  target: string,
+  expires: string
+): Promise<Waiver | undefined> {
+  const waivers = await readWaivers(root);
+  const index = waivers.findIndex((waiver) => waiverMatches(waiver, target));
+
+  if (index === -1) {
+    return undefined;
+  }
+
+  const renewed = { ...waivers[index], expires };
+  const next = [...waivers];
+  next[index] = renewed;
+  await writeJson(waiversPath(root), next);
+  return renewed;
+}
+
+export async function pruneExpiredWaivers(root: string): Promise<{
+  kept: Waiver[];
+  pruned: Waiver[];
+}> {
+  const waivers = await readWaivers(root);
+  const kept = waivers.filter((waiver) => waiverIsActive(waiver));
+  const pruned = waivers.filter((waiver) => !waiverIsActive(waiver));
+
+  if (pruned.length > 0) {
+    await writeJson(waiversPath(root), kept);
+  }
+
+  return { kept, pruned };
+}
+
 export function summarizeWaivers(
   waivers: Waiver[],
   now = new Date()
@@ -117,4 +151,8 @@ export function applyFindingStatuses(
 export function waiverIsActive(waiver: Waiver, now = new Date()): boolean {
   const expires = Date.parse(waiver.expires);
   return Number.isFinite(expires) && expires >= now.getTime();
+}
+
+export function waiverMatches(waiver: Waiver, target: string): boolean {
+  return waiver.id === target || waiver.fingerprint === target;
 }

@@ -1,4 +1,10 @@
-import { addWaiver, readWaivers, waiverIsActive } from "../baseline.js";
+import {
+  addWaiver,
+  pruneExpiredWaivers,
+  readWaivers,
+  renewWaiver,
+  waiverIsActive
+} from "../baseline.js";
 import type { Waiver } from "../types.js";
 
 export interface CommandResult {
@@ -26,11 +32,7 @@ export async function waiverCommand(
   if (action === "add") {
     const validation = validateAdd(id, values);
     if (!validation.ok) {
-      return {
-        ok: false,
-        text: `${validation.error}\n\n${usage()}`,
-        data: { error: validation.error }
-      };
+      return failure(validation.error);
     }
 
     const waiver = await addWaiver(root, validation.waiver);
@@ -38,6 +40,47 @@ export async function waiverCommand(
       ok: true,
       text: `Waiver added for ${waiver.id ?? waiver.fingerprint} until ${waiver.expires}.\n`,
       data: waiver
+    };
+  }
+
+  if (action === "renew") {
+    if (!id) {
+      return failure("Missing finding id or fingerprint.");
+    }
+
+    const expires = values.get("expires");
+    if (!expires) {
+      return failure("Missing --expires.");
+    }
+
+    if (!validDate(expires)) {
+      return failure("--expires must be YYYY-MM-DD.");
+    }
+
+    const waiver = await renewWaiver(root, id, expires);
+
+    if (!waiver) {
+      return {
+        ok: false,
+        text: `Waiver not found: ${id}\n`,
+        data: { error: "waiver not found", target: id }
+      };
+    }
+
+    return {
+      ok: true,
+      text: `Waiver renewed for ${waiver.id ?? waiver.fingerprint} until ${waiver.expires}.\n`,
+      data: waiver
+    };
+  }
+
+  if (action === "prune") {
+    const result = await pruneExpiredWaivers(root);
+
+    return {
+      ok: true,
+      text: `Pruned ${result.pruned.length} expired waiver(s); kept ${result.kept.length} active waiver(s).\n`,
+      data: result
     };
   }
 
@@ -74,7 +117,7 @@ function validateAdd(
     return { ok: false, error: "Missing --expires." };
   }
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(expires) || Number.isNaN(Date.parse(expires))) {
+  if (!validDate(expires)) {
     return { ok: false, error: "--expires must be YYYY-MM-DD." };
   }
 
@@ -86,6 +129,14 @@ function validateAdd(
       owner,
       expires
     }
+  };
+}
+
+function failure(error: string): CommandResult {
+  return {
+    ok: false,
+    text: `${error}\n\n${usage()}`,
+    data: { error }
   };
 }
 
@@ -112,5 +163,11 @@ function usage(): string {
   return `Usage:
   steward waiver list [--json]
   steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD>
+  steward waiver renew <finding-id> --expires <YYYY-MM-DD>
+  steward waiver prune [--json]
 `;
+}
+
+function validDate(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
 }

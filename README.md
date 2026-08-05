@@ -11,6 +11,7 @@ GitHub: https://github.com/JBCongdon/project-steward
 Current deterministic detectors:
 
 - required `.project/` layout
+- policy configuration
 - relative Markdown links
 - ADR quality
 - plan lifecycle state
@@ -55,6 +56,8 @@ steward status
 steward explain finding <id>
 steward waiver list
 steward waiver add <finding-id> --reason "why" --owner "name" --expires 2026-12-31
+steward waiver renew <finding-id> --expires 2027-01-31
+steward waiver prune
 ```
 
 All command output supports `--json` where useful.
@@ -68,6 +71,7 @@ SARIF export emits new, unwaived findings only. Baselined and waived findings re
 - A degraded run must never report a fully trustworthy "clean" result.
 - Legacy repos need baseline ratcheting: gate new drift first, burn down old drift deliberately, and report baseline age.
 - Waivers require a reason, owner, and expiry, and audit reports active vs. expired counts.
+- Expired waivers can be pruned explicitly with `steward waiver prune`.
 - Generated project knowledge must remain inspectable, human-editable, and reversible.
 
 ## Roadmap

@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
-import { addWaiver } from "../src/baseline.js";
+import { addWaiver, pruneExpiredWaivers, readWaivers, renewWaiver } from "../src/baseline.js";
 import { rebuildIndex } from "../src/indexer.js";
 import { createProjectLayout } from "../src/layout.js";
 import { formatSarif } from "../src/sarif.js";
@@ -121,6 +121,42 @@ describe("audit", () => {
     });
   });
 
+  it("renews and prunes waivers", async () => {
+    const root = await tempProject();
+
+    await addWaiver(root, {
+      id: "STW-RENEW",
+      reason: "Needs more time.",
+      owner: "test",
+      expires: "2000-01-01"
+    });
+    await addWaiver(root, {
+      id: "STW-KEEP",
+      reason: "Still active.",
+      owner: "test",
+      expires: "2999-01-01"
+    });
+
+    const renewed = await renewWaiver(root, "STW-RENEW", "2999-02-01");
+    const pruned = await pruneExpiredWaivers(root);
+    const waivers = await readWaivers(root);
+
+    expect(renewed?.expires).toBe("2999-02-01");
+    expect(pruned.pruned).toHaveLength(0);
+    expect(waivers.map((waiver) => waiver.id)).toEqual(["STW-KEEP", "STW-RENEW"]);
+  });
+
+  it("does not create a waiver file for a no-op prune", async () => {
+    const root = await tempProject();
+
+    const pruned = await pruneExpiredWaivers(root);
+
+    await expect(
+      fs.access(path.join(root, ".project", "waivers.json"))
+    ).rejects.toThrow();
+    expect(pruned).toEqual({ kept: [], pruned: [] });
+  });
+
   it("reports ADRs missing required sections", async () => {
     const root = await tempProject();
     await fs.writeFile(
@@ -168,6 +204,42 @@ describe("audit", () => {
     );
     expect(planFindings.map((finding) => finding.message)).toContain(
       ".project/plans/completed/missing-status.md does not declare a Status field."
+    );
+  });
+
+  it("reports invalid policy YAML without crashing audit", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, ".project", "policy.yaml"),
+      "detectors:\n  markdown-links: [\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+    const policyFinding = report.findings.find(
+      (finding) => finding.detectorId === "policy-config"
+    );
+
+    expect(policyFinding?.message).toBe(
+      ".project/policy.yaml could not be parsed as YAML."
+    );
+  });
+
+  it("reports unsupported policy detector ids", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, ".project", "policy.yaml"),
+      "detectors:\n  not-a-detector: true\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+    const policyFinding = report.findings.find(
+      (finding) => finding.detectorId === "policy-config"
+    );
+
+    expect(policyFinding?.message).toBe(
+      "detectors.not-a-detector is not a known detector id."
     );
   });
 

@@ -17,12 +17,13 @@ Completed:
 - ADR-only decision coverage
 - Plan lifecycle detector
 - GitHub issue and PR templates
+- Waiver renew/prune commands
+- Policy configuration detector
 - Basic tests
 - Public GitHub repository
 
 Next:
 - Open GitHub issues for the next S1 detector and SARIF/export work
 - Add schema validation for SARIF output
-- Add waiver prune/renew commands
 - Add git-correlation detectors
 - Add release automation when the CLI contract settles

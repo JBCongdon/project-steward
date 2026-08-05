@@ -1,5 +1,6 @@
 detectors:
   project-layout: true
+  policy-config: true
   markdown-links: true
   adr-quality: true
   plan-state: true

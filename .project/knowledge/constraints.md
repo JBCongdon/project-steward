@@ -13,3 +13,5 @@
 - Decision coverage must count ADR files, not decision directory indexes.
 - Audit output must report baseline age when a baseline exists.
 - Plan lifecycle detectors must compare Status fields against plan directory state.
+- Invalid policy configuration must emit findings rather than crashing audit.
+- Expired waivers must be removed only by explicit command.

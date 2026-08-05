@@ -199,6 +199,8 @@ Usage:
   steward explain finding <id>
   steward waiver list [--json]
   steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD>
+  steward waiver renew <finding-id> --expires <YYYY-MM-DD>
+  steward waiver prune [--json]
 
 Project Steward is a vendor-neutral project intelligence layer for AI-assisted engineering.
 `;

@@ -8,6 +8,7 @@ import type { StewardPolicy } from "./types.js";
 export const DEFAULT_POLICY: StewardPolicy = {
   detectors: {
     "project-layout": true,
+    "policy-config": true,
     "markdown-links": true,
     "adr-quality": true,
     "plan-state": true
@@ -29,7 +30,13 @@ export async function loadPolicy(root: string): Promise<StewardPolicy> {
   }
 
   const raw = await fs.readFile(policyPath, "utf8");
-  const parsed = YAML.parse(raw) as Partial<StewardPolicy> | undefined;
+  let parsed: Partial<StewardPolicy> | undefined;
+
+  try {
+    parsed = YAML.parse(raw) as Partial<StewardPolicy> | undefined;
+  } catch {
+    return DEFAULT_POLICY;
+  }
 
   return {
     detectors: {
