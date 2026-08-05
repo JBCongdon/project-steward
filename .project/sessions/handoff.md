@@ -10,8 +10,8 @@ Completed:
 - Deterministic layout and Markdown-link detectors
 - Audit baseline support
 - Basic tests
+- Public GitHub repository
 
 Next:
-- Initialize git
-- Run full verification after `.project/` customization
-- Create public GitHub repository
+- Open GitHub issues for the next S1 detector and waiver CLI work
+- Add release automation when the CLI contract settles

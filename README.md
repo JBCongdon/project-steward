@@ -4,6 +4,8 @@ Project Steward is a vendor-neutral project intelligence layer for AI-assisted e
 
 It preserves project intent, decisions, plans, evidence, and drift signals so coding agents can work from the same durable understanding of a repository instead of starting from scratch every session.
 
+GitHub: https://github.com/JBCongdon/project-steward
+
 > Status: early open-source foundation. The current implementation covers the first read-only slice: project initialization, deterministic audit findings, baseline ratcheting, CI-style checks, and finding explanations.
 
 ## Why this exists

@@ -17,7 +17,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Implement baseline ratcheting
 - [x] Implement CI-style `check`
 - [x] Add tests for determinism and baseline behavior
-- [ ] Publish public GitHub repository
+- [x] Publish public GitHub repository
 
 ## Required Evidence
 
@@ -25,3 +25,4 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - `npm test`
 - `npm run build`
 - `steward audit`
+- `gh repo create project-steward --public --source=. --remote=origin --push`

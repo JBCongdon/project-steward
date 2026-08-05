@@ -12,6 +12,7 @@
   - CI-ready `check`
   - finding explanations
   - tests and contribution docs
+  - public GitHub repository
 
 ## Known Broken
 

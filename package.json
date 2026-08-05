@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "description": "A vendor-neutral project intelligence layer for AI-assisted engineering.",
   "type": "module",
+  "homepage": "https://github.com/JBCongdon/project-steward#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JBCongdon/project-steward.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JBCongdon/project-steward/issues"
+  },
   "bin": {
     "steward": "./dist/cli.js"
   },
