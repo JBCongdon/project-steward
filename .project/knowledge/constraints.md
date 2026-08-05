@@ -15,3 +15,4 @@
 - Plan lifecycle detectors must compare Status fields against plan directory state.
 - Invalid policy configuration must emit findings rather than crashing audit.
 - Expired waivers must be removed only by explicit command.
+- Markdown link checking must validate heading anchors for Markdown targets.

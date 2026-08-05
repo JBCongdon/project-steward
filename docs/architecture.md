@@ -32,7 +32,7 @@ The index is a cache, not authority. The committed `.project/` directory and the
 
 - `project-layout`: required committed `.project/` files
 - `policy-config`: policy YAML and supported field validation
-- `markdown-links`: relative Markdown link targets
+- `markdown-links`: relative Markdown file targets and heading anchors
 - `adr-quality`: ADR status and required sections
 - `plan-state`: plan Status field vs. directory lifecycle state
 

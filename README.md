@@ -12,7 +12,7 @@ Current deterministic detectors:
 
 - required `.project/` layout
 - policy configuration
-- relative Markdown links
+- relative Markdown links and heading anchors
 - ADR quality
 - plan lifecycle state
 

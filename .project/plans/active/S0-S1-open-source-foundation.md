@@ -28,6 +28,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add GitHub issue and PR templates
 - [x] Add waiver renew/prune commands
 - [x] Add policy configuration detector
+- [x] Validate Markdown heading anchors
 
 ## Required Evidence
 

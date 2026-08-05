@@ -23,6 +23,7 @@
   - GitHub issue and PR templates
   - waiver renew/prune commands
   - policy configuration detector
+  - Markdown heading-anchor validation
 
 ## Known Broken
 

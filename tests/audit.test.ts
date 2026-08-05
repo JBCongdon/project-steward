@@ -31,6 +31,33 @@ describe("audit", () => {
     );
   });
 
+  it("reports broken markdown anchors", async () => {
+    const root = await tempProject();
+    await fs.mkdir(path.join(root, "docs"), { recursive: true });
+    await fs.writeFile(
+      path.join(root, "README.md"),
+      "# Start\n\nSee [missing local](#missing-heading) and [missing remote](docs/guide.md#missing-remote).\n",
+      "utf8"
+    );
+    await fs.writeFile(
+      path.join(root, "docs", "guide.md"),
+      "# Guide\n\n## Existing Remote\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+    const messages = report.findings
+      .filter((finding) => finding.detectorId === "markdown-links")
+      .map((finding) => finding.message);
+
+    expect(messages).toContain(
+      "README.md links to missing anchor #missing-heading in #missing-heading."
+    );
+    expect(messages).toContain(
+      "README.md links to missing anchor #missing-remote in docs/guide.md#missing-remote."
+    );
+  });
+
   it("accepts the current audit as a baseline", async () => {
     const root = await tempProject();
     await fs.writeFile(

@@ -19,6 +19,7 @@ Completed:
 - GitHub issue and PR templates
 - Waiver renew/prune commands
 - Policy configuration detector
+- Markdown heading-anchor validation
 - Basic tests
 - Public GitHub repository
 

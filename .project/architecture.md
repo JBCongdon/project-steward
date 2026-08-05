@@ -22,7 +22,7 @@ Repository files are scanned by deterministic detectors. Findings are enriched w
 
 Audit reports baseline finding count and baseline age when `.project/audit-baseline.json` exists. Decision coverage counts ADR files only; `.project/decisions/index.md` is a project index, not a decision record.
 
-The current deterministic detector set covers required layout files, policy configuration, relative Markdown links, ADR quality, and plan lifecycle state.
+The current deterministic detector set covers required layout files, policy configuration, relative Markdown links and heading anchors, ADR quality, and plan lifecycle state.
 
 ### Waiver
 
