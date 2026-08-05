@@ -45,6 +45,20 @@ export async function addWaiver(root: string, waiver: Waiver): Promise<Waiver> {
   return waiver;
 }
 
+export function summarizeWaivers(
+  waivers: Waiver[],
+  now = new Date()
+): { total: number; active: number; expired: number } {
+  const total = waivers.length;
+  const active = waivers.filter((waiver) => waiverIsActive(waiver, now)).length;
+
+  return {
+    total,
+    active,
+    expired: total - active
+  };
+}
+
 export function applyFindingStatuses(
   findings: Finding[],
   baseline: AuditBaseline | undefined,
@@ -52,10 +66,7 @@ export function applyFindingStatuses(
   now = new Date()
 ): Finding[] {
   const baselineFingerprints = new Set(baseline?.fingerprints ?? []);
-  const activeWaivers = waivers.filter((waiver) => {
-    const expires = Date.parse(waiver.expires);
-    return Number.isFinite(expires) && expires >= now.getTime();
-  });
+  const activeWaivers = waivers.filter((waiver) => waiverIsActive(waiver, now));
 
   return findings.map((finding) => {
     const isWaived = activeWaivers.some(
@@ -73,4 +84,9 @@ export function applyFindingStatuses(
 
     return { ...finding, status: "new" };
   });
+}
+
+export function waiverIsActive(waiver: Waiver, now = new Date()): boolean {
+  const expires = Date.parse(waiver.expires);
+  return Number.isFinite(expires) && expires >= now.getTime();
 }

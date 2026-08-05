@@ -12,10 +12,12 @@ Completed:
 - Waiver CLI
 - ADR quality detector
 - SARIF export
+- Waiver health reporting
 - Basic tests
 - Public GitHub repository
 
 Next:
 - Open GitHub issues for the next S1 detector and SARIF/export work
 - Add schema validation for SARIF output
+- Add waiver prune/renew commands
 - Add release automation when the CLI contract settles

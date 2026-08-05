@@ -19,6 +19,9 @@ export function formatAudit(report: AuditReport): string {
   lines.push(
     `coverage: ${report.coverage.markdownFilesScanned} markdown files, ${report.coverage.decisions} decisions, ${report.coverage.activePlans} active plans`
   );
+  lines.push(
+    `waivers: ${report.waivers.active} active, ${report.waivers.expired} expired`
+  );
 
   if (report.degraded.length > 0) {
     lines.push("");

@@ -1,4 +1,4 @@
-import { addWaiver, readWaivers } from "../baseline.js";
+import { addWaiver, readWaivers, waiverIsActive } from "../baseline.js";
 import type { Waiver } from "../types.js";
 
 export interface CommandResult {
@@ -99,6 +99,7 @@ function formatWaivers(waivers: Waiver[]): string {
   for (const waiver of waivers) {
     lines.push("");
     lines.push(`target: ${waiver.id ?? waiver.fingerprint}`);
+    lines.push(`status: ${waiverIsActive(waiver) ? "active" : "expired"}`);
     lines.push(`owner: ${waiver.owner}`);
     lines.push(`expires: ${waiver.expires}`);
     lines.push(`reason: ${waiver.reason}`);

@@ -21,7 +21,7 @@ Repository files are scanned by deterministic detectors. Findings are enriched w
 
 ### Waiver
 
-`steward waiver add` records a suppression in `.project/waivers.json`. Waivers require a reason, owner, and expiry date. Audit still emits the underlying finding, but marks it `waived` while the waiver is active.
+`steward waiver add` records a suppression in `.project/waivers.json`. Waivers require a reason, owner, and expiry date. Audit still emits the underlying finding, but marks it `waived` while the waiver is active. Audit and status output report active and expired waiver counts.
 
 ### SARIF Export
 

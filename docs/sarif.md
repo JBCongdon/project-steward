@@ -17,4 +17,6 @@ Each result includes:
 - `properties.confidence`: high, medium, or low
 - `properties.evidence`: the evidence records behind the finding
 
+Run-level invocation properties include degraded coverage, coverage counts, and waiver counts.
+
 The current exporter is intentionally minimal. It should grow only around concrete consumer requirements.

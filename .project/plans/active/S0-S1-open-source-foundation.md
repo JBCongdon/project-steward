@@ -21,6 +21,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add waiver CLI
 - [x] Add ADR quality detector
 - [x] Add SARIF export for new findings
+- [x] Report active and expired waiver counts
 
 ## Required Evidence
 

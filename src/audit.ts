@@ -1,6 +1,12 @@
 import path from "node:path";
 import { REQUIRED_PROJECT_FILES } from "./constants.js";
-import { readBaseline, readWaivers, writeBaseline, applyFindingStatuses } from "./baseline.js";
+import {
+  readBaseline,
+  readWaivers,
+  writeBaseline,
+  applyFindingStatuses,
+  summarizeWaivers
+} from "./baseline.js";
 import { DETECTORS } from "./detectors/index.js";
 import { countMarkdownFiles } from "./detectors/markdownLinks.js";
 import { exists, walkFiles } from "./fsx.js";
@@ -54,6 +60,7 @@ export async function runAudit(
       requiredProjectFilesPresent: projectStatus.present.length,
       requiredProjectFilesTotal: REQUIRED_PROJECT_FILES.length
     },
+    waivers: summarizeWaivers(waivers),
     findings
   };
 }

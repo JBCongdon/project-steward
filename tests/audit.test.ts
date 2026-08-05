@@ -81,6 +81,31 @@ describe("audit", () => {
     expect(waived?.status).toBe("waived");
   });
 
+  it("summarizes active and expired waivers", async () => {
+    const root = await tempProject();
+
+    await addWaiver(root, {
+      id: "STW-ACTIVE",
+      reason: "Still under review.",
+      owner: "test",
+      expires: "2999-01-01"
+    });
+    await addWaiver(root, {
+      id: "STW-EXPIRED",
+      reason: "Expired test waiver.",
+      owner: "test",
+      expires: "2000-01-01"
+    });
+
+    const report = await runAudit(root);
+
+    expect(report.waivers).toEqual({
+      total: 2,
+      active: 1,
+      expired: 1
+    });
+  });
+
   it("reports ADRs missing required sections", async () => {
     const root = await tempProject();
     await fs.writeFile(

@@ -80,6 +80,11 @@ export interface AuditReport {
     requiredProjectFilesPresent: number;
     requiredProjectFilesTotal: number;
   };
+  waivers: {
+    total: number;
+    active: number;
+    expired: number;
+  };
   findings: Finding[];
 }
 
