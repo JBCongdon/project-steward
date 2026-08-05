@@ -35,6 +35,43 @@ describe("audit", () => {
     );
   });
 
+  it("scans ordinary fixtures directories unless policy excludes them", async () => {
+    const root = await tempProject();
+    await fs.mkdir(path.join(root, "fixtures"), { recursive: true });
+    await fs.writeFile(
+      path.join(root, "fixtures", "example.md"),
+      "See [missing](missing.md).\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+
+    expect(report.findings.map((finding) => finding.message)).toContain(
+      "fixtures/example.md links to missing target missing.md."
+    );
+  });
+
+  it("honors policy exclude_paths", async () => {
+    const root = await tempProject();
+    await fs.mkdir(path.join(root, "fixtures", "evaluation"), { recursive: true });
+    await fs.writeFile(
+      path.join(root, "fixtures", "evaluation", "example.md"),
+      "See [missing](missing.md).\n",
+      "utf8"
+    );
+    await fs.writeFile(
+      path.join(root, ".project", "policy.yaml"),
+      "exclude_paths:\n  - fixtures/evaluation/**\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+
+    expect(report.findings.map((finding) => finding.message)).not.toContain(
+      "fixtures/evaluation/example.md links to missing target missing.md."
+    );
+  });
+
   it("reports broken markdown anchors", async () => {
     const root = await tempProject();
     await fs.mkdir(path.join(root, "docs"), { recursive: true });

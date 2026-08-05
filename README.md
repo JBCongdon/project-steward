@@ -71,6 +71,8 @@ Use `steward detectors` to inspect available detectors and whether policy curren
 
 Use `steward eval` to run the committed detector evaluation fixtures.
 
+Tune detector behavior in `.project/policy.yaml`. See [docs/policy.md](docs/policy.md).
+
 SARIF export emits new, unwaived findings only. Baselined and waived findings remain visible in `steward audit --json`, but are left out of SARIF so first adoption does not flood code-scanning tools with accepted legacy drift.
 
 ## Core ideas

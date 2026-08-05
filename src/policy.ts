@@ -6,6 +6,7 @@ import { exists } from "./fsx.js";
 import type { StewardPolicy } from "./types.js";
 
 export const DEFAULT_POLICY: StewardPolicy = {
+  exclude_paths: [],
   detectors: {
     "project-layout": true,
     "project-git-state": true,
@@ -40,6 +41,7 @@ export async function loadPolicy(root: string): Promise<StewardPolicy> {
   }
 
   return {
+    exclude_paths: parsed?.exclude_paths ?? DEFAULT_POLICY.exclude_paths,
     detectors: {
       ...DEFAULT_POLICY.detectors,
       ...(parsed?.detectors ?? {})

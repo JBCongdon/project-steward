@@ -55,12 +55,34 @@ export const policyConfigDetector: Detector = {
     }
 
     return [
+      ...validateExcludePaths(parsed.exclude_paths),
       ...validateDetectors(parsed.detectors),
       ...validateBudget(parsed.drift_budget),
       ...validatePlans(parsed.plans)
     ];
   }
 };
+
+function validateExcludePaths(value: unknown): Finding[] {
+  if (value === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(value)) {
+    return [invalidValueFinding("exclude_paths must be a list of path patterns.", "exclude_paths")];
+  }
+
+  return value.flatMap((item, index) =>
+    typeof item === "string" && item.length > 0
+      ? []
+      : [
+          invalidValueFinding(
+            `exclude_paths[${index}] must be a non-empty string.`,
+            `exclude_paths[${index}]`
+          )
+        ]
+  );
+}
 
 function validateDetectors(value: unknown): Finding[] {
   if (value === undefined) {

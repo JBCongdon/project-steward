@@ -31,7 +31,7 @@ The current deterministic detector set covers required layout files, git trackin
 
 `steward eval` runs committed fixtures from `fixtures/evaluation` and compares exact expected findings against audit output. CI runs the harness after build.
 
-Normal audit skips the top-level `fixtures/` directory. Evaluation audits each fixture as its own root so intentional drift fixtures do not pollute the repository's own audit.
+Normal audit honors repository-specific exclusions from `.project/policy.yaml`. This repository excludes `fixtures/evaluation/**`; evaluation audits each fixture as its own root so intentional drift fixtures do not pollute the repository's own audit.
 
 ### Waiver
 

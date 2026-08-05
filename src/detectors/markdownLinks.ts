@@ -9,8 +9,12 @@ const LINK_PATTERN = /!?\[[^\]]*]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 export const markdownLinksDetector: Detector = {
   id: "markdown-links",
   description: "Checks relative Markdown links for missing files and anchors.",
-  async run({ root }) {
-    const files = await walkFiles(root, { extensions: [".md"], includeHidden: true });
+  async run({ root, excludedPaths }) {
+    const files = await walkFiles(root, {
+      extensions: [".md"],
+      includeHidden: true,
+      exclude: excludedPaths
+    });
     const findings: Finding[] = [];
     const anchorCache = new Map<string, Promise<Set<string>>>();
 
@@ -91,8 +95,17 @@ export const markdownLinksDetector: Detector = {
   }
 };
 
-export async function countMarkdownFiles(root: string): Promise<number> {
-  return (await walkFiles(root, { extensions: [".md"], includeHidden: true })).length;
+export async function countMarkdownFiles(
+  root: string,
+  excludedPaths: string[] = []
+): Promise<number> {
+  return (
+    await walkFiles(root, {
+      extensions: [".md"],
+      includeHidden: true,
+      exclude: excludedPaths
+    })
+  ).length;
 }
 
 function shouldSkipTarget(target: string): boolean {

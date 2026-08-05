@@ -18,6 +18,6 @@
 - Markdown link checking must validate heading anchors for Markdown targets.
 - Waiver creation must reject unknown current-audit findings unless explicitly forced.
 - Detector regressions should be covered by committed evaluation fixtures.
-- Normal audit must exclude intentional evaluation fixtures.
+- Normal audit must exclude intentional evaluation fixtures through policy, not hardcoded global fixture ignores.
 - Shallow git clones must be reported as degraded coverage.
 - Required `.project/` records must be tracked by git when git is available.

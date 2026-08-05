@@ -3,14 +3,17 @@ import path from "node:path";
 import { PROJECT_DIR, STEWARD_DIR } from "./constants.js";
 import { ensureDir, exists, toPosix, walkFiles, writeJson } from "./fsx.js";
 import { getGitInfo } from "./git.js";
+import { loadPolicy } from "./policy.js";
 import { isAdrPath } from "./records.js";
 import type { ProjectIndex } from "./types.js";
 
 export async function rebuildIndex(root: string): Promise<ProjectIndex> {
   const git = getGitInfo(root);
+  const policy = await loadPolicy(root);
   const markdownFiles = await walkFiles(root, {
     extensions: [".md"],
-    includeHidden: true
+    includeHidden: true,
+    exclude: policy.exclude_paths
   });
 
   const documents = markdownFiles.map((relative) => ({

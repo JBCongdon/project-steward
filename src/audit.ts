@@ -36,7 +36,9 @@ export async function runAudit(
       continue;
     }
 
-    detectorFindings.push(...(await detector.run({ root })));
+    detectorFindings.push(
+      ...(await detector.run({ root, excludedPaths: policy.exclude_paths }))
+    );
   }
 
   let baseline = await readBaseline(root);
@@ -56,7 +58,7 @@ export async function runAudit(
     baselineCommit: git.commit,
     degraded,
     coverage: {
-      markdownFilesScanned: await countMarkdownFiles(root),
+      markdownFilesScanned: await countMarkdownFiles(root, policy.exclude_paths),
       decisions: await countMarkdownRecords(root, ".project/decisions", isAdrPath),
       activePlans: await countMarkdownRecords(root, ".project/plans/active"),
       requiredProjectFilesPresent: projectStatus.present.length,

@@ -33,6 +33,7 @@ export interface Finding {
 
 export interface DetectorContext {
   root: string;
+  excludedPaths: string[];
 }
 
 export interface Detector {
@@ -42,6 +43,7 @@ export interface Detector {
 }
 
 export interface StewardPolicy {
+  exclude_paths: string[];
   detectors: Record<string, boolean>;
   drift_budget: {
     high_confidence_findings_max: number;

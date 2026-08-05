@@ -26,6 +26,7 @@ Completed:
 - Quickstart and CI docs
 - Shallow git clone degraded-mode detection
 - Required project-record git tracking detector
+- Policy-driven path exclusions
 - Basic tests
 - Public GitHub repository
 

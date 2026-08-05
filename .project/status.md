@@ -30,6 +30,7 @@
   - quickstart and CI docs
   - shallow git clone degraded-mode detection
   - required project-record git tracking detector
+  - policy-driven path exclusions
 
 ## Known Broken
 

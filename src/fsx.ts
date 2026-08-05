@@ -5,7 +5,6 @@ import path from "node:path";
 const DEFAULT_IGNORES = new Set([
   ".git",
   ".steward",
-  "fixtures",
   "node_modules",
   "dist",
   "coverage"
@@ -53,7 +52,7 @@ export async function writeJson(filePath: string, value: unknown): Promise<void>
 
 export async function walkFiles(
   root: string,
-  options: { extensions?: string[]; includeHidden?: boolean } = {}
+  options: { extensions?: string[]; includeHidden?: boolean; exclude?: string[] } = {}
 ): Promise<string[]> {
   const extensions = options.extensions;
   const files: string[] = [];
@@ -73,6 +72,11 @@ export async function walkFiles(
       }
 
       const absolute = path.join(dir, entry.name);
+      const relative = toPosix(path.relative(root, absolute));
+
+      if (shouldExclude(relative, options.exclude ?? [])) {
+        continue;
+      }
 
       if (entry.isDirectory()) {
         await visit(absolute);
@@ -97,4 +101,15 @@ export async function walkFiles(
 
 export function toPosix(relativePath: string): string {
   return relativePath.split(path.sep).join("/");
+}
+
+function shouldExclude(relativePath: string, patterns: string[]): boolean {
+  return patterns.some((pattern) => {
+    if (pattern.endsWith("/**")) {
+      const base = pattern.slice(0, -3);
+      return relativePath === base || relativePath.startsWith(`${base}/`);
+    }
+
+    return relativePath === pattern;
+  });
 }

@@ -38,6 +38,8 @@ steward explain finding <id>
 steward waiver add <id> --reason "temporary exception" --owner "you" --expires 2026-12-31
 ```
 
+Tune policy in `.project/policy.yaml`, including detector enablement, drift budgets, and `exclude_paths`.
+
 Project Steward treats `.project/` as committed project memory. Review those files before committing them.
 
 `steward audit` reports required `.project/` records that exist locally but are not tracked by git.
