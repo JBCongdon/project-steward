@@ -39,6 +39,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add baseline status/clear command
 - [x] Ensure init appends `.steward/` to existing `.gitignore`
 - [x] Add clean-project evaluation fixture
+- [x] Extend git tracking detector to baseline and waiver files
 
 ## Required Evidence
 

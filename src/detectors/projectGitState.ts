@@ -6,6 +6,8 @@ import { exists } from "../fsx.js";
 import { getGitInfo } from "../git.js";
 import type { Detector, Finding } from "../types.js";
 
+const OPTIONAL_COMMITTED_PROJECT_FILES = ["audit-baseline.json", "waivers.json"];
+
 export const projectGitStateDetector: Detector = {
   id: "project-git-state",
   description: "Checks that required .project records are tracked by git.",
@@ -17,8 +19,11 @@ export const projectGitStateDetector: Detector = {
 
     const findings: Finding[] = [];
 
-    for (const required of REQUIRED_PROJECT_FILES) {
-      const relative = path.join(PROJECT_DIR, required);
+    for (const projectFile of [
+      ...REQUIRED_PROJECT_FILES,
+      ...OPTIONAL_COMMITTED_PROJECT_FILES
+    ]) {
+      const relative = path.join(PROJECT_DIR, projectFile);
       const absolute = path.join(root, relative);
       if (!(await exists(absolute))) {
         continue;

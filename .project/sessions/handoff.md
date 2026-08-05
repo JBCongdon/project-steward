@@ -30,6 +30,7 @@ Completed:
 - Baseline status/clear command
 - `.gitignore` append behavior for `.steward/`
 - Clean-project evaluation fixture
+- Git tracking detector covers baseline and waiver files
 - Basic tests
 - Public GitHub repository
 

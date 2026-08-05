@@ -200,6 +200,36 @@ describe("audit", () => {
     );
   });
 
+  it("reports local baseline and waiver files that are not tracked by git", async () => {
+    const root = await tempProject();
+    execFileSync("git", ["init", "-b", "main"], { cwd: root });
+    execFileSync("git", ["config", "user.name", "Test"], { cwd: root });
+    execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: root });
+    execFileSync("git", ["config", "commit.gpgsign", "false"], { cwd: root });
+    execFileSync("git", ["add", ".project"], { cwd: root });
+    execFileSync("git", ["commit", "-m", "project records"], { cwd: root });
+    await fs.writeFile(
+      path.join(root, ".project", "audit-baseline.json"),
+      '{"version":1,"acceptedAt":"2999-01-01T00:00:00.000Z","baselineCommit":"abc","fingerprints":[]}\n',
+      "utf8"
+    );
+    await fs.writeFile(
+      path.join(root, ".project", "waivers.json"),
+      "[]\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+    const messages = report.findings
+      .filter((finding) => finding.detectorId === "project-git-state")
+      .map((finding) => finding.message);
+
+    expect(messages).toContain(
+      ".project/audit-baseline.json exists but is not tracked by git."
+    );
+    expect(messages).toContain(".project/waivers.json exists but is not tracked by git.");
+  });
+
   it("does not count decisions/index.md as an ADR", async () => {
     const root = await tempProject();
     const report = await runAudit(root);

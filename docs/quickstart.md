@@ -44,4 +44,4 @@ Tune policy in `.project/policy.yaml`, including detector enablement, drift budg
 
 Project Steward treats `.project/` as committed project memory. Review those files before committing them.
 
-`steward audit` reports required `.project/` records that exist locally but are not tracked by git.
+`steward audit` reports required `.project/` records, baselines, and waivers that exist locally but are not tracked by git.

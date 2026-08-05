@@ -33,6 +33,7 @@
   - policy-driven path exclusions
   - baseline status/clear command
   - `.gitignore` append behavior for `.steward/`
+  - git tracking detector covers baseline and waiver files
 
 ## Known Broken
 

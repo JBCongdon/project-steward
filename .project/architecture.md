@@ -25,7 +25,7 @@ Audit reports baseline finding count and baseline age when `.project/audit-basel
 
 `steward baseline status` inspects the accepted baseline. `steward baseline clear --force` removes it explicitly.
 
-The current deterministic detector set covers required layout files, git tracking for required project records, policy configuration, relative Markdown links and heading anchors, ADR quality, and plan lifecycle state.
+The current deterministic detector set covers required layout files, git tracking for required project records and local governance files, policy configuration, relative Markdown links and heading anchors, ADR quality, and plan lifecycle state.
 
 `steward detectors` lists the detector catalog with policy enabled/disabled state.
 
