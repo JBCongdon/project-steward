@@ -28,6 +28,7 @@ Completed:
 - Required project-record git tracking detector
 - Policy-driven path exclusions
 - Baseline status/clear command
+- `.gitignore` append behavior for `.steward/`
 - Basic tests
 - Public GitHub repository
 

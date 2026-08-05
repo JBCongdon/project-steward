@@ -22,3 +22,4 @@
 - Shallow git clones must be reported as degraded coverage.
 - Required `.project/` records must be tracked by git when git is available.
 - Clearing a baseline must require an explicit force flag.
+- `steward init` must ensure `.steward/` is gitignored without removing existing `.gitignore` entries.

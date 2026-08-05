@@ -32,6 +32,7 @@
   - required project-record git tracking detector
   - policy-driven path exclusions
   - baseline status/clear command
+  - `.gitignore` append behavior for `.steward/`
 
 ## Known Broken
 

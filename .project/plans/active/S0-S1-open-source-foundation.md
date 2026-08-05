@@ -37,6 +37,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add required project-record git tracking detector
 - [x] Add policy-driven path exclusions
 - [x] Add baseline status/clear command
+- [x] Ensure init appends `.steward/` to existing `.gitignore`
 
 ## Required Evidence
 

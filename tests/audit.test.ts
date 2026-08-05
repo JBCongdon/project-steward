@@ -36,6 +36,17 @@ describe("audit", () => {
     );
   });
 
+  it("appends .steward to an existing gitignore during init", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "project-steward-"));
+    await fs.writeFile(path.join(root, ".gitignore"), "dist/\n", "utf8");
+
+    await createProjectLayout(root);
+
+    await expect(fs.readFile(path.join(root, ".gitignore"), "utf8")).resolves.toBe(
+      "dist/\n.steward/\n"
+    );
+  });
+
   it("scans ordinary fixtures directories unless policy excludes them", async () => {
     const root = await tempProject();
     await fs.mkdir(path.join(root, "fixtures"), { recursive: true });

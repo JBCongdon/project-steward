@@ -1,4 +1,5 @@
 import path from "node:path";
+import fs from "node:fs/promises";
 import { GENERATED_MARKER, PROJECT_DIR, REQUIRED_PROJECT_FILES } from "./constants.js";
 import { defaultPolicyYaml } from "./policy.js";
 import { ensureDir, exists, writeIfMissing } from "./fsx.js";
@@ -154,4 +155,14 @@ async function ensureGitignore(root: string): Promise<void> {
     await writeIfMissing(gitignore, `${line}\n`);
     return;
   }
+
+  const contents = await fs.readFile(gitignore, "utf8");
+  const entries = contents.split(/\r?\n/).map((entry) => entry.trim());
+
+  if (entries.includes(line)) {
+    return;
+  }
+
+  const separator = contents.endsWith("\n") || contents.length === 0 ? "" : "\n";
+  await fs.writeFile(gitignore, `${contents}${separator}${line}\n`, "utf8");
 }
