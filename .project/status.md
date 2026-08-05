@@ -28,6 +28,7 @@
   - detector catalog command
   - committed evaluation harness and first fixture
   - quickstart and CI docs
+  - shallow git clone degraded-mode detection
 
 ## Known Broken
 

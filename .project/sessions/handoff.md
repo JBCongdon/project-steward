@@ -24,6 +24,7 @@ Completed:
 - Detector catalog command
 - Evaluation harness and first golden fixture
 - Quickstart and CI docs
+- Shallow git clone degraded-mode detection
 - Basic tests
 - Public GitHub repository
 

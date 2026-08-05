@@ -19,3 +19,4 @@
 - Waiver creation must reject unknown current-audit findings unless explicitly forced.
 - Detector regressions should be covered by committed evaluation fixtures.
 - Normal audit must exclude intentional evaluation fixtures.
+- Shallow git clones must be reported as degraded coverage.

@@ -24,6 +24,8 @@ jobs:
 
 Use `fetch-depth: 0` so future git-correlation detectors have history. When git history is unavailable, Project Steward reports degraded coverage instead of claiming a fully trustworthy clean result.
 
+Shallow clones are treated as degraded for the same reason.
+
 To produce SARIF:
 
 ```sh

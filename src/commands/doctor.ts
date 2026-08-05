@@ -12,6 +12,9 @@ export async function doctorCommand(root: string): Promise<{
 
   lines.push("Project Steward doctor");
   lines.push(`git: ${git.isGitRepository ? `ok (${git.commit})` : "missing"}`);
+  if (git.isShallow) {
+    lines.push("git history: shallow clone");
+  }
   lines.push(
     `.project layout: ${project.present.length}/${project.present.length + project.missing.length} required files present`
   );

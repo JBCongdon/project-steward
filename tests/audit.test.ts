@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -85,6 +86,25 @@ describe("audit", () => {
 
     expect(result.passed).toBe(false);
     expect(result.report.degraded.length).toBeGreaterThan(0);
+  });
+
+  it("reports shallow git clones as degraded", async () => {
+    const source = await tempProject();
+    execFileSync("git", ["init", "-b", "main"], { cwd: source });
+    execFileSync("git", ["config", "user.name", "Test"], { cwd: source });
+    execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: source });
+    execFileSync("git", ["add", "."], { cwd: source });
+    execFileSync("git", ["commit", "-m", "fixture"], { cwd: source });
+
+    const clone = await fs.mkdtemp(path.join(os.tmpdir(), "project-steward-shallow-"));
+    await fs.rm(clone, { recursive: true, force: true });
+    execFileSync("git", ["clone", "--depth=1", `file://${source}`, clone]);
+
+    const report = await runAudit(clone);
+
+    expect(report.degraded).toContain(
+      "Shallow clone detected; git-correlation detectors are disabled."
+    );
   });
 
   it("does not count decisions/index.md as an ADR", async () => {
