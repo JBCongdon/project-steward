@@ -20,6 +20,7 @@
   - baseline age reporting
   - accurate ADR-only decision coverage
   - plan lifecycle detector
+  - GitHub issue and PR templates
 
 ## Known Broken
 

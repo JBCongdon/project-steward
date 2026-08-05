@@ -25,6 +25,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Report audit baseline age
 - [x] Count only ADR files as decision records
 - [x] Add plan lifecycle detector
+- [x] Add GitHub issue and PR templates
 
 ## Required Evidence
 

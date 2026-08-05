@@ -32,3 +32,5 @@ Please include:
 - A short description of the user-visible behavior
 - Tests or fixtures for detector changes
 - Any precision caveats or degraded-mode behavior
+
+Detector proposals should use the detector proposal issue template. A good detector proposal names both the evidence it uses and the conditions where it should stay silent.

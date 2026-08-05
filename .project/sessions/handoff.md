@@ -16,6 +16,7 @@ Completed:
 - Baseline age reporting
 - ADR-only decision coverage
 - Plan lifecycle detector
+- GitHub issue and PR templates
 - Basic tests
 - Public GitHub repository
 
