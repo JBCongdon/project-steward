@@ -34,6 +34,7 @@
   - baseline status/clear command
   - `.gitignore` append behavior for `.steward/`
   - git tracking detector covers baseline and waiver files
+  - v0.1.1 release preparation
 
 ## Known Broken
 

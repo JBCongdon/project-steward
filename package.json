@@ -1,6 +1,6 @@
 {
   "name": "project-steward",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A vendor-neutral project intelligence layer for AI-assisted engineering.",
   "type": "module",
   "homepage": "https://github.com/JBCongdon/project-steward#readme",
