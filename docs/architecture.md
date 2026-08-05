@@ -36,6 +36,8 @@ The index is a cache, not authority. The committed `.project/` directory and the
 - `adr-quality`: ADR status and required sections
 - `plan-state`: plan Status field vs. directory lifecycle state
 
+`steward detectors` renders this catalog with policy enabled/disabled state.
+
 ## Future Interfaces
 
 The PRD calls for a graph repository abstraction from the first durable implementation. This initial version uses a JSON index only as a stepping stone; it should not leak into future query APIs.

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import path from "node:path";
 import { runAudit, checkDriftBudget } from "./audit.js";
+import { detectorsCommand } from "./commands/detectors.js";
 import { doctorCommand } from "./commands/doctor.js";
 import { explainFindingCommand } from "./commands/explain.js";
 import { initCommand } from "./commands/init.js";
@@ -46,6 +47,16 @@ async function main(): Promise<void> {
         process.stdout.write(result.text);
       }
       process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "detectors": {
+      const result = await detectorsCommand(parsed.root);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
       return;
     }
 
@@ -197,6 +208,7 @@ function helpText(): string {
 Usage:
   steward init [--root <path>]
   steward doctor [--json]
+  steward detectors [--json]
   steward rebuild [--json]
   steward audit [--json|--sarif] [--accept-baseline]
   steward check [--json|--sarif]

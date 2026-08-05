@@ -25,6 +25,7 @@
   - policy configuration detector
   - Markdown heading-anchor validation
   - waiver target validation with explicit force override
+  - detector catalog command
 
 ## Known Broken
 

@@ -21,6 +21,7 @@ Completed:
 - Policy configuration detector
 - Markdown heading-anchor validation
 - Waiver target validation with explicit force override
+- Detector catalog command
 - Basic tests
 - Public GitHub repository
 

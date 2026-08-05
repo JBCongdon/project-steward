@@ -24,6 +24,8 @@ Audit reports baseline finding count and baseline age when `.project/audit-basel
 
 The current deterministic detector set covers required layout files, policy configuration, relative Markdown links and heading anchors, ADR quality, and plan lifecycle state.
 
+`steward detectors` lists the detector catalog with policy enabled/disabled state.
+
 ### Waiver
 
 `steward waiver add` records a suppression in `.project/waivers.json`. Waivers require a reason, owner, and expiry date. By default, waiver creation verifies that the target exists in the current audit; `--force` records an offline waiver deliberately. Audit still emits the underlying finding, but marks it `waived` while the waiver is active. Audit and status output report active and expired waiver counts. `steward waiver renew` updates expiry, and `steward waiver prune` removes expired waivers explicitly.

@@ -4,6 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
 import { addWaiver, pruneExpiredWaivers, readWaivers, renewWaiver } from "../src/baseline.js";
+import { detectorsCommand } from "../src/commands/detectors.js";
 import { waiverCommand } from "../src/commands/waiver.js";
 import { rebuildIndex } from "../src/indexer.js";
 import { createProjectLayout } from "../src/layout.js";
@@ -297,6 +298,25 @@ describe("audit", () => {
     expect(policyFinding?.message).toBe(
       "detectors.not-a-detector is not a known detector id."
     );
+  });
+
+  it("lists detectors with policy enabled state", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, ".project", "policy.yaml"),
+      "detectors:\n  plan-state: false\n",
+      "utf8"
+    );
+
+    const result = await detectorsCommand(root);
+    const planState = result.data.find((detector) => detector.id === "plan-state");
+    const markdownLinks = result.data.find(
+      (detector) => detector.id === "markdown-links"
+    );
+
+    expect(planState?.enabled).toBe(false);
+    expect(markdownLinks?.enabled).toBe(true);
+    expect(result.text).toContain("disabled plan-state");
   });
 
   it("exports only new unwaived findings to SARIF", async () => {

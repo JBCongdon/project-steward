@@ -46,6 +46,7 @@ steward --help
 ```sh
 steward init
 steward doctor
+steward detectors
 steward rebuild
 steward audit
 steward audit --sarif > steward.sarif
@@ -61,6 +62,8 @@ steward waiver prune
 ```
 
 All command output supports `--json` where useful.
+
+Use `steward detectors` to inspect available detectors and whether policy currently enables them.
 
 SARIF export emits new, unwaived findings only. Baselined and waived findings remain visible in `steward audit --json`, but are left out of SARIF so first adoption does not flood code-scanning tools with accepted legacy drift.
 

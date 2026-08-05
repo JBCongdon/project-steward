@@ -30,6 +30,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add policy configuration detector
 - [x] Validate Markdown heading anchors
 - [x] Validate waiver targets by default
+- [x] Add detector catalog command
 
 ## Required Evidence
 
