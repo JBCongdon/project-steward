@@ -29,11 +29,12 @@ Completed:
 - Policy-driven path exclusions
 - Baseline status/clear command
 - `.gitignore` append behavior for `.steward/`
+- Clean-project evaluation fixture
 - Basic tests
 - Public GitHub repository
 
 Next:
-- Add more evaluation fixtures for clean repos, baselines, and waivers
+- Add more evaluation fixtures for baselines, waivers, and git-correlation cases
 - Add release automation and npm publishing decision
 - Open GitHub issues for the next S1 detector and SARIF/export work
 - Add schema validation for SARIF output

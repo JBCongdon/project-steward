@@ -38,7 +38,7 @@
 
 - Deeper git-correlation detectors are not implemented yet.
 - SARIF export is minimal and not yet schema-validated in tests.
-- Evaluation corpus is intentionally tiny and needs more fixtures.
+- Evaluation corpus is still small and needs more language/framework fixtures.
 - Package is not published to npm yet.
 - MCP context packet compilation is planned but not implemented.
 - The local index is JSON-only and not yet a graph repository abstraction.

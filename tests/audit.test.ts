@@ -164,6 +164,7 @@ describe("audit", () => {
     execFileSync("git", ["init", "-b", "main"], { cwd: source });
     execFileSync("git", ["config", "user.name", "Test"], { cwd: source });
     execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: source });
+    execFileSync("git", ["config", "commit.gpgsign", "false"], { cwd: source });
     execFileSync("git", ["add", "."], { cwd: source });
     execFileSync("git", ["commit", "-m", "fixture"], { cwd: source });
 
@@ -183,6 +184,7 @@ describe("audit", () => {
     execFileSync("git", ["init", "-b", "main"], { cwd: root });
     execFileSync("git", ["config", "user.name", "Test"], { cwd: root });
     execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: root });
+    execFileSync("git", ["config", "commit.gpgsign", "false"], { cwd: root });
     await fs.writeFile(path.join(root, "README.md"), "# Fixture\n", "utf8");
     execFileSync("git", ["add", "README.md"], { cwd: root });
     execFileSync("git", ["commit", "-m", "fixture"], { cwd: root });
