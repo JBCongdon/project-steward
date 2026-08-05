@@ -34,6 +34,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add committed evaluation harness and first fixture
 - [x] Add quickstart and CI usage docs
 - [x] Add shallow git clone degraded-mode detection
+- [x] Add required project-record git tracking detector
 
 ## Required Evidence
 

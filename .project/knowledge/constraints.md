@@ -20,3 +20,4 @@
 - Detector regressions should be covered by committed evaluation fixtures.
 - Normal audit must exclude intentional evaluation fixtures.
 - Shallow git clones must be reported as degraded coverage.
+- Required `.project/` records must be tracked by git when git is available.

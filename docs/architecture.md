@@ -32,6 +32,7 @@ The index is a cache, not authority. The committed `.project/` directory and the
 ## Current Detectors
 
 - `project-layout`: required committed `.project/` files
+- `project-git-state`: required `.project` records tracked by git
 - `policy-config`: policy YAML and supported field validation
 - `markdown-links`: relative Markdown file targets and heading anchors
 - `adr-quality`: ADR status and required sections

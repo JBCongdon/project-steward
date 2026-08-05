@@ -11,6 +11,7 @@ GitHub: https://github.com/JBCongdon/project-steward
 Current deterministic detectors:
 
 - required `.project/` layout
+- git tracking for required `.project/` records
 - policy configuration
 - relative Markdown links and heading anchors
 - ADR quality

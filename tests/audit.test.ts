@@ -107,6 +107,26 @@ describe("audit", () => {
     );
   });
 
+  it("reports required project records that are not tracked by git", async () => {
+    const root = await tempProject();
+    execFileSync("git", ["init", "-b", "main"], { cwd: root });
+    execFileSync("git", ["config", "user.name", "Test"], { cwd: root });
+    execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: root });
+    await fs.writeFile(path.join(root, "README.md"), "# Fixture\n", "utf8");
+    execFileSync("git", ["add", "README.md"], { cwd: root });
+    execFileSync("git", ["commit", "-m", "fixture"], { cwd: root });
+
+    const report = await runAudit(root);
+    const gitFindings = report.findings.filter(
+      (finding) => finding.detectorId === "project-git-state"
+    );
+
+    expect(gitFindings.length).toBeGreaterThan(0);
+    expect(gitFindings.map((finding) => finding.message)).toContain(
+      ".project/project.md exists but is not tracked by git."
+    );
+  });
+
   it("does not count decisions/index.md as an ADR", async () => {
     const root = await tempProject();
     const report = await runAudit(root);

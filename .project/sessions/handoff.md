@@ -25,6 +25,7 @@ Completed:
 - Evaluation harness and first golden fixture
 - Quickstart and CI docs
 - Shallow git clone degraded-mode detection
+- Required project-record git tracking detector
 - Basic tests
 - Public GitHub repository
 

@@ -39,3 +39,5 @@ steward waiver add <id> --reason "temporary exception" --owner "you" --expires 2
 ```
 
 Project Steward treats `.project/` as committed project memory. Review those files before committing them.
+
+`steward audit` reports required `.project/` records that exist locally but are not tracked by git.

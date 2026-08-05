@@ -8,6 +8,7 @@ import type { StewardPolicy } from "./types.js";
 export const DEFAULT_POLICY: StewardPolicy = {
   detectors: {
     "project-layout": true,
+    "project-git-state": true,
     "policy-config": true,
     "markdown-links": true,
     "adr-quality": true,

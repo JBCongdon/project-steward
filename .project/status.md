@@ -29,10 +29,11 @@
   - committed evaluation harness and first fixture
   - quickstart and CI docs
   - shallow git clone degraded-mode detection
+  - required project-record git tracking detector
 
 ## Known Broken
 
-- Git-correlation detectors are not implemented yet.
+- Deeper git-correlation detectors are not implemented yet.
 - SARIF export is minimal and not yet schema-validated in tests.
 - Evaluation corpus is intentionally tiny and needs more fixtures.
 - Package is not published to npm yet.

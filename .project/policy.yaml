@@ -1,5 +1,6 @@
 detectors:
   project-layout: true
+  project-git-state: true
   policy-config: true
   markdown-links: true
   adr-quality: true
