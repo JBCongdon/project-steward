@@ -145,6 +145,32 @@ describe("audit", () => {
     );
   });
 
+  it("reports plans with missing or mismatched lifecycle state", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, ".project", "plans", "active", "completed-plan.md"),
+      "# Completed Plan\n\nStatus: Completed\n",
+      "utf8"
+    );
+    await fs.writeFile(
+      path.join(root, ".project", "plans", "completed", "missing-status.md"),
+      "# Missing Status\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+    const planFindings = report.findings.filter(
+      (finding) => finding.detectorId === "plan-state"
+    );
+
+    expect(planFindings.map((finding) => finding.message)).toContain(
+      ".project/plans/active/completed-plan.md is in .project/plans/active but declares Status: Completed."
+    );
+    expect(planFindings.map((finding) => finding.message)).toContain(
+      ".project/plans/completed/missing-status.md does not declare a Status field."
+    );
+  });
+
   it("exports only new unwaived findings to SARIF", async () => {
     const root = await tempProject();
     await fs.writeFile(

@@ -19,6 +19,7 @@
   - active/expired waiver reporting
   - baseline age reporting
   - accurate ADR-only decision coverage
+  - plan lifecycle detector
 
 ## Known Broken
 

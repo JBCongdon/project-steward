@@ -15,6 +15,7 @@ Completed:
 - Waiver health reporting
 - Baseline age reporting
 - ADR-only decision coverage
+- Plan lifecycle detector
 - Basic tests
 - Public GitHub repository
 

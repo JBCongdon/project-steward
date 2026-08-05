@@ -22,6 +22,8 @@ Repository files are scanned by deterministic detectors. Findings are enriched w
 
 Audit reports baseline finding count and baseline age when `.project/audit-baseline.json` exists. Decision coverage counts ADR files only; `.project/decisions/index.md` is a project index, not a decision record.
 
+The current deterministic detector set covers required layout files, relative Markdown links, ADR quality, and plan lifecycle state.
+
 ### Waiver
 
 `steward waiver add` records a suppression in `.project/waivers.json`. Waivers require a reason, owner, and expiry date. Audit still emits the underlying finding, but marks it `waived` while the waiver is active. Audit and status output report active and expired waiver counts.

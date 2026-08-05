@@ -9,7 +9,8 @@ export const DEFAULT_POLICY: StewardPolicy = {
   detectors: {
     "project-layout": true,
     "markdown-links": true,
-    "adr-quality": true
+    "adr-quality": true,
+    "plan-state": true
   },
   drift_budget: {
     high_confidence_findings_max: 0,

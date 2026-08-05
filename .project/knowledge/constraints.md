@@ -12,3 +12,4 @@
 - SARIF export must not include baselined or waived findings by default.
 - Decision coverage must count ADR files, not decision directory indexes.
 - Audit output must report baseline age when a baseline exists.
+- Plan lifecycle detectors must compare Status fields against plan directory state.

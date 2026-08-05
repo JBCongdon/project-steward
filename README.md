@@ -8,6 +8,13 @@ GitHub: https://github.com/JBCongdon/project-steward
 
 > Status: early open-source foundation. The current implementation covers the first read-only slice: project initialization, deterministic audit findings, baseline ratcheting, CI-style checks, and finding explanations.
 
+Current deterministic detectors:
+
+- required `.project/` layout
+- relative Markdown links
+- ADR quality
+- plan lifecycle state
+
 ## Why this exists
 
 AI coding agents are fast, but project memory is fragile. Decisions get trapped in chat sessions, documentation drifts away from code, and "done" often means only that an agent stopped working.

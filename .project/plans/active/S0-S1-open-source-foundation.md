@@ -24,6 +24,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Report active and expired waiver counts
 - [x] Report audit baseline age
 - [x] Count only ADR files as decision records
+- [x] Add plan lifecycle detector
 
 ## Required Evidence
 

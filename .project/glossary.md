@@ -13,3 +13,4 @@
 | Detector | Read-only scanner that emits findings |
 | Degraded run | Run with missing inputs or disabled coverage that cannot claim full cleanliness |
 | ADR quality | Deterministic check that decision records include required state and review sections |
+| Plan lifecycle state | The relationship between a plan file's Status field and its active/completed/abandoned directory |
