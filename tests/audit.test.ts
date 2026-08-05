@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
 import { addWaiver } from "../src/baseline.js";
 import { createProjectLayout } from "../src/layout.js";
+import { formatSarif } from "../src/sarif.js";
 
 describe("audit", () => {
   it("reports broken relative markdown links with stable ids", async () => {
@@ -102,6 +103,21 @@ describe("audit", () => {
     expect(adrFindings.map((finding) => finding.message)).toContain(
       ".project/decisions/ADR-0002-thin-record.md is missing the Rollback section."
     );
+  });
+
+  it("exports only new unwaived findings to SARIF", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, "README.md"),
+      "See [missing docs](docs/missing.md).\n",
+      "utf8"
+    );
+
+    const baselineReport = await runAudit(root, { acceptBaseline: true });
+    const sarif = formatSarif(baselineReport);
+
+    expect(sarif.version).toBe("2.1.0");
+    expect(sarif.runs[0].results).toHaveLength(0);
   });
 });
 

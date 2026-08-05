@@ -9,6 +9,7 @@ import { waiverCommand } from "./commands/waiver.js";
 import { VERSION } from "./constants.js";
 import { rebuildIndex } from "./indexer.js";
 import { formatAudit, formatIndex, printJson } from "./output.js";
+import { formatSarif } from "./sarif.js";
 
 interface ParsedArgs {
   command?: string;
@@ -64,7 +65,9 @@ async function main(): Promise<void> {
         acceptBaseline: parsed.flags.has("accept-baseline")
       });
 
-      if (parsed.flags.has("json")) {
+      if (parsed.flags.has("sarif")) {
+        printJson(formatSarif(report));
+      } else if (parsed.flags.has("json")) {
         printJson(report);
       } else {
         process.stdout.write(formatAudit(report));
@@ -74,7 +77,9 @@ async function main(): Promise<void> {
 
     case "check": {
       const result = await checkDriftBudget(parsed.root);
-      if (parsed.flags.has("json")) {
+      if (parsed.flags.has("sarif")) {
+        printJson(formatSarif(result.report));
+      } else if (parsed.flags.has("json")) {
         printJson(result);
       } else {
         process.stdout.write(`Project Steward check ${result.passed ? "passed" : "failed"}\n`);
@@ -188,8 +193,8 @@ Usage:
   steward init [--root <path>]
   steward doctor [--json]
   steward rebuild [--json]
-  steward audit [--json] [--accept-baseline]
-  steward check [--json]
+  steward audit [--json|--sarif] [--accept-baseline]
+  steward check [--json|--sarif]
   steward status
   steward explain finding <id>
   steward waiver list [--json]

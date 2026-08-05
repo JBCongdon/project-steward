@@ -20,6 +20,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Publish public GitHub repository
 - [x] Add waiver CLI
 - [x] Add ADR quality detector
+- [x] Add SARIF export for new findings
 
 ## Required Evidence
 
@@ -28,3 +29,5 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - `npm run build`
 - `steward audit`
 - `gh repo create project-steward --public --source=. --remote=origin --push`
+- `steward audit --sarif`
+- `steward check --sarif`

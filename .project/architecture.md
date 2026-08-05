@@ -8,6 +8,7 @@
 - `src/audit.ts`: detector orchestration, baseline handling, coverage summary, check budgets
 - `src/baseline.ts`: accepted baseline and waiver persistence
 - `src/detectors`: deterministic read-only detectors
+- `src/sarif.ts`: SARIF export renderer
 - `src/indexer.ts`: rebuildable local index writer
 - `src/layout.ts`: committed `.project/` layout creation and validation
 - `src/policy.ts`: policy loading and defaults
@@ -21,6 +22,10 @@ Repository files are scanned by deterministic detectors. Findings are enriched w
 ### Waiver
 
 `steward waiver add` records a suppression in `.project/waivers.json`. Waivers require a reason, owner, and expiry date. Audit still emits the underlying finding, but marks it `waived` while the waiver is active.
+
+### SARIF Export
+
+`steward audit --sarif` and `steward check --sarif` render new, unwaived findings as SARIF 2.1.0. Baselined and waived findings remain available in JSON output but are omitted from SARIF to avoid flooding code-scanning tools with accepted legacy drift.
 
 ### Check
 

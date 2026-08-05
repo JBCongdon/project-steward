@@ -40,8 +40,10 @@ steward init
 steward doctor
 steward rebuild
 steward audit
+steward audit --sarif > steward.sarif
 steward audit --accept-baseline
 steward check
+steward check --sarif > steward.sarif
 steward status
 steward explain finding <id>
 steward waiver list
@@ -49,6 +51,8 @@ steward waiver add <finding-id> --reason "why" --owner "name" --expires 2026-12-
 ```
 
 All command output supports `--json` where useful.
+
+SARIF export emits new, unwaived findings only. Baselined and waived findings remain visible in `steward audit --json`, but are left out of SARIF so first adoption does not flood code-scanning tools with accepted legacy drift.
 
 ## Core ideas
 
@@ -62,6 +66,14 @@ All command output supports `--json` where useful.
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md).
+
+## Interoperability
+
+Project Steward can emit SARIF 2.1.0 for tools such as GitHub code scanning:
+
+```sh
+steward audit --sarif > steward.sarif
+```
 
 ## Product definition
 

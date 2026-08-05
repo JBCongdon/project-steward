@@ -11,9 +11,11 @@ Completed:
 - Audit baseline support
 - Waiver CLI
 - ADR quality detector
+- SARIF export
 - Basic tests
 - Public GitHub repository
 
 Next:
 - Open GitHub issues for the next S1 detector and SARIF/export work
+- Add schema validation for SARIF output
 - Add release automation when the CLI contract settles
