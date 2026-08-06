@@ -112,6 +112,7 @@ Detector behavior is checked against committed fixtures:
 npm run build
 npm run benchmark:packets
 npm run eval
+npm run test:local
 ```
 
 See [docs/evaluation.md](docs/evaluation.md).

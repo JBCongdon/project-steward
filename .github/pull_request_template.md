@@ -7,7 +7,8 @@ Describe the user-visible change.
 - [ ] `npm run check`
 - [ ] `npm test`
 - [ ] `npm run build`
-- [ ] `steward audit`
+- [ ] `npm run test:local`
+- [ ] `kairn audit`
 
 ## Detector changes
 

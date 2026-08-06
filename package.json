@@ -18,6 +18,7 @@
     "dist",
     "docs",
     "fixtures",
+    "scripts",
     "README.md",
     "LICENSE"
   ],
@@ -28,6 +29,7 @@
     "eval": "node dist/cli.js eval",
     "study": "node dist/cli.js study",
     "test": "vitest run",
+    "test:local": "npm run build && node scripts/local-smoke.mjs",
     "test:watch": "vitest",
     "prepare": "npm run build"
   },

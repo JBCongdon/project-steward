@@ -24,6 +24,14 @@ This repository excludes `fixtures/evaluation/**` in `.project/policy.yaml`. `ka
 
 This is intentionally simple. The goal is to make detector regressions visible before the project grows a larger golden corpus.
 
+For local dogfooding, run:
+
+```sh
+npm run test:local
+```
+
+The local smoke test exercises the built CLI against this repository and a throwaway initialized git repository. It covers first-run untracked project records, clean committed state, broken-link drift, baseline ratcheting, dirty `.project` records, session recording, reconcile dry-run, handoff, and judgment classification.
+
 Current fixtures:
 
 - `basic-drift`: intentionally broken project records with expected findings

@@ -47,6 +47,7 @@ Completed:
 - SARIF schema validation
 - Initial git-correlation detectors for stale active plans and dirty `.project` records
 - Tag-triggered release verification workflow
+- Local dogfood smoke test script
 
 Next:
 - Configure `NPM_TOKEN` and publish the first npm package

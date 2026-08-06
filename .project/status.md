@@ -18,6 +18,7 @@
   - packet recall benchmark
   - initial git-correlation detectors
   - tag-triggered release verification
+  - local dogfood smoke test
 
 ## Known Broken
 

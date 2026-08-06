@@ -10,6 +10,7 @@ Run the release gate before tagging:
 npm run check
 npm test
 npm run build
+npm run test:local
 npm run benchmark:packets
 npm run eval
 npm run study

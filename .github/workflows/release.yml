@@ -34,6 +34,7 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run build
+      - run: npm run test:local
       - run: npm run benchmark:packets
       - run: npm run eval
       - run: npm run study
