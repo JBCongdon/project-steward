@@ -9,7 +9,7 @@ export async function evalCommand(
   data: unknown;
 }> {
   const result = await runEvaluation(root, fixturesPath);
-  const lines = [`Project Steward evaluation ${result.passed ? "passed" : "failed"}`];
+  const lines = [`Kairn evaluation ${result.passed ? "passed" : "failed"}`];
 
   for (const fixture of result.fixtures) {
     lines.push("");

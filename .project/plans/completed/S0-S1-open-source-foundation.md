@@ -2,7 +2,7 @@
 
 # S0/S1 Open-Source Foundation
 
-Status: Active
+Status: Completed
 
 ## Objective
 

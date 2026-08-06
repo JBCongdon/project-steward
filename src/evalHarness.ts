@@ -70,10 +70,10 @@ export async function runEvaluation(
 }
 
 async function evaluateFixture(fixturePath: string): Promise<FixtureEvalResult> {
-  const manifestPath = path.join(fixturePath, "steward-fixture.json");
+  const manifestPath = path.join(fixturePath, "kairn-fixture.json");
   const raw = await fs.readFile(manifestPath, "utf8");
   const manifest = JSON.parse(raw) as FixtureManifest;
-  const scratchParent = await fs.mkdtemp(path.join(os.tmpdir(), "project-steward-eval-"));
+  const scratchParent = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-eval-"));
   const scratchFixture = path.join(scratchParent, path.basename(fixturePath));
 
   try {

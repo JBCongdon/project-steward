@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping build Project Steward.
+Thanks for helping build Kairn.
 
 This project is early. The highest-value contributions are small, deterministic, and well-tested:
 

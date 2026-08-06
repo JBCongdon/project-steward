@@ -2,15 +2,19 @@
 import path from "node:path";
 import { runAudit, checkDriftBudget } from "./audit.js";
 import { baselineCommand } from "./commands/baseline.js";
+import { packetCommand, briefCommand, feedbackCommand } from "./commands/context.js";
 import { detectorsCommand } from "./commands/detectors.js";
 import { doctorCommand } from "./commands/doctor.js";
 import { evalCommand } from "./commands/eval.js";
 import { explainFindingCommand } from "./commands/explain.js";
 import { initCommand } from "./commands/init.js";
+import { adrCommand, judgeCommand, studyCommand } from "./commands/judgment.js";
+import { handoffCommand, reconcileCommand, sessionCommand } from "./commands/session.js";
 import { statusCommand } from "./commands/status.js";
 import { waiverCommand } from "./commands/waiver.js";
 import { VERSION } from "./constants.js";
 import { rebuildIndex } from "./indexer.js";
+import { startMcpServer } from "./mcpServer.js";
 import { formatAudit, formatIndex, printJson } from "./output.js";
 import { formatSarif } from "./sarif.js";
 
@@ -25,13 +29,13 @@ interface ParsedArgs {
 async function main(): Promise<void> {
   const parsed = parseArgs(process.argv.slice(2));
 
-  if (!parsed.command || parsed.flags.has("help") || parsed.flags.has("h")) {
-    process.stdout.write(helpText());
+  if (parsed.flags.has("version") || parsed.command === "version") {
+    process.stdout.write(`${VERSION}\n`);
     return;
   }
 
-  if (parsed.flags.has("version") || parsed.command === "version") {
-    process.stdout.write(`${VERSION}\n`);
+  if (!parsed.command || parsed.flags.has("help") || parsed.flags.has("h")) {
+    process.stdout.write(helpText());
     return;
   }
 
@@ -84,6 +88,44 @@ async function main(): Promise<void> {
       return;
     }
 
+    case "mcp": {
+      await startMcpServer(parsed.root);
+      return;
+    }
+
+    case "packet": {
+      const result = await packetCommand(parsed.root, parsed.positionals, parsed.values);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "brief": {
+      const result = await briefCommand(parsed.root, parsed.positionals, parsed.values);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "feedback": {
+      const result = await feedbackCommand(parsed.root, parsed.values);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
     case "rebuild":
     case "index": {
       const index = await rebuildIndex(parsed.root);
@@ -117,7 +159,7 @@ async function main(): Promise<void> {
       } else if (parsed.flags.has("json")) {
         printJson(result);
       } else {
-        process.stdout.write(`Project Steward check ${result.passed ? "passed" : "failed"}\n`);
+        process.stdout.write(`Kairn check ${result.passed ? "passed" : "failed"}\n`);
         process.stdout.write(`${result.summary}\n`);
       }
       process.exitCode = result.passed ? 0 : 1;
@@ -129,10 +171,81 @@ async function main(): Promise<void> {
       return;
     }
 
+    case "session": {
+      const result = await sessionCommand(parsed.root, parsed.positionals, parsed.values);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "handoff": {
+      const result = await handoffCommand(parsed.root, parsed.flags);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "reconcile": {
+      const result = await reconcileCommand(parsed.root, parsed.flags);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "judge": {
+      const result = await judgeCommand(parsed.positionals, parsed.values);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "adr": {
+      const result = await adrCommand(
+        parsed.root,
+        parsed.positionals,
+        parsed.values,
+        parsed.flags
+      );
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "study": {
+      const result = await studyCommand(parsed.root, parsed.values);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
     case "explain": {
       const [kind, id] = parsed.positionals;
       if (kind !== "finding") {
-        process.stdout.write("Usage: steward explain finding <id>\n");
+        process.stdout.write("Usage: kairn explain finding <id>\n");
         process.exitCode = 1;
         return;
       }
@@ -170,7 +283,26 @@ function parseArgs(args: string[]): ParsedArgs {
   const values = new Map<string, string>();
   const positionals: string[] = [];
   let root = process.cwd();
-  const valueFlags = new Set(["owner", "reason", "expires", "fixtures"]);
+  const valueFlags = new Set([
+    "assumption",
+    "budget",
+    "command",
+    "deferred",
+    "expires",
+    "file",
+    "fixtures",
+    "note",
+    "objective",
+    "owner",
+    "packet",
+    "packet-id",
+    "passed",
+    "reason",
+    "supplied",
+    "test",
+    "title",
+    "touched"
+  ]);
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -227,26 +359,39 @@ function parseArgs(args: string[]): ParsedArgs {
 }
 
 function helpText(): string {
-  return `Project Steward ${VERSION}
+  return `Kairn ${VERSION}
 
 Usage:
-  steward init [--root <path>]
-  steward doctor [--json]
-  steward baseline status [--json]
-  steward baseline clear --force [--json]
-  steward detectors [--json]
-  steward eval [--json] [--fixtures <path>]
-  steward rebuild [--json]
-  steward audit [--json|--sarif] [--accept-baseline]
-  steward check [--json|--sarif]
-  steward status
-  steward explain finding <id>
-  steward waiver list [--json]
-  steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD> [--force]
-  steward waiver renew <finding-id> --expires <YYYY-MM-DD>
-  steward waiver prune [--json]
+  kairn init [--root <path>]
+  kairn doctor [--json]
+  kairn baseline status [--json]
+  kairn baseline clear --force [--json]
+  kairn detectors [--json]
+  kairn eval [--json] [--fixtures <path>]
+  kairn mcp
+  kairn rebuild [--json]
+  kairn packet <objective> [--budget <tokens>] [--json]
+  kairn brief <objective> [--budget <tokens>] [--json]
+  kairn feedback --packet-id <id> --supplied <paths> --touched <paths> [--json]
+  kairn audit [--json|--sarif] [--accept-baseline]
+  kairn check [--json|--sarif]
+  kairn status
+  kairn session start --objective <text>
+  kairn session record [--file <path>] [--command <cmd>] [--test <cmd>] [--passed true|false]
+  kairn session status
+  kairn session close
+  kairn handoff [--write] [--json]
+  kairn reconcile --dry-run [--json]
+  kairn judge <objective> [--json]
+  kairn adr propose --title <title> --objective <text> [--write] [--json]
+  kairn study [--fixtures <path>] [--json]
+  kairn explain finding <id>
+  kairn waiver list [--json]
+  kairn waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD> [--force]
+  kairn waiver renew <finding-id> --expires <YYYY-MM-DD>
+  kairn waiver prune [--json]
 
-Project Steward is a vendor-neutral project intelligence layer for AI-assisted engineering.
+Kairn is a vendor-neutral project intelligence layer for AI-assisted engineering.
 `;
 }
 

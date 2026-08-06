@@ -7,7 +7,7 @@ export function stableHash(input: unknown): string {
 }
 
 export function findingId(fingerprint: string): string {
-  return `STW-${fingerprint.slice(0, 10).toUpperCase()}`;
+  return `KRN-${fingerprint.slice(0, 10).toUpperCase()}`;
 }
 
 function sortObject(value: unknown): unknown {

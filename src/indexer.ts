@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { PROJECT_DIR, STEWARD_DIR } from "./constants.js";
+import { PROJECT_DIR, KAIRN_DIR } from "./constants.js";
 import { ensureDir, exists, toPosix, walkFiles, writeJson } from "./fsx.js";
 import { getGitInfo } from "./git.js";
 import { loadPolicy } from "./policy.js";
@@ -46,7 +46,7 @@ export async function rebuildIndex(root: string): Promise<ProjectIndex> {
     }))
   };
 
-  const indexPath = path.join(root, STEWARD_DIR, "index", "project-index.json");
+  const indexPath = path.join(root, KAIRN_DIR, "index", "project-index.json");
   await ensureDir(path.dirname(indexPath));
   await writeJson(indexPath, index);
   return index;

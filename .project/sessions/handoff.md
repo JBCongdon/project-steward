@@ -33,11 +33,21 @@ Completed:
 - Git tracking detector covers baseline and waiver files
 - Basic tests
 - Public GitHub repository
+- Deterministic context packet command
+- Execution brief command
+- Retrieval feedback capture
+- Read-only MCP stdio server
+- Session ledger command
+- Handoff generation
+- Reconcile dry-run
+- Intent judgment command
+- Proposed ADR drafting
+- Decision-study harness and first fixture
 
 Next:
-- Add more evaluation fixtures for baselines, waivers, and git-correlation cases
 - Add release automation and npm publishing decision
-- Open GitHub issues for the next S1 detector and SARIF/export work
 - Add schema validation for SARIF output
 - Add git-correlation detectors
-- Add release automation when the CLI contract settles
+- Expand packet benchmark with labeled must-include sets
+- Expand decision-study corpus beyond the first fixture
+- Add second agent adapter documentation

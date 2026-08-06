@@ -14,7 +14,7 @@ export function formatAudit(report: AuditReport): string {
     (finding) => finding.status === "waived"
   ).length;
 
-  lines.push("Project Steward audit");
+  lines.push("Kairn audit");
   lines.push(`commit: ${report.baselineCommit}`);
   lines.push(
     `coverage: ${report.coverage.markdownFilesScanned} markdown files, ${report.coverage.decisions} decisions, ${report.coverage.activePlans} active plans`
@@ -68,7 +68,7 @@ export function formatFinding(finding: Finding): string {
 
 export function formatIndex(index: ProjectIndex): string {
   return [
-    "Project Steward index rebuilt",
+    "Kairn index rebuilt",
     `commit: ${index.baselineCommit}`,
     `documents: ${index.documents.length}`,
     `decisions: ${index.decisions.length}`,

@@ -30,7 +30,7 @@ export const projectLayoutDetector: Detector = {
         ],
         impact:
           "Agents and maintainers may miss project intent, constraints, decisions, or handoff state.",
-        recommendedAction: `Run steward init or create ${path.join(PROJECT_DIR, missing)}.`,
+        recommendedAction: `Run kairn init or create ${path.join(PROJECT_DIR, missing)}.`,
         reversibility: "trivial",
         requiredApproval: "none",
         explanation:

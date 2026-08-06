@@ -48,7 +48,7 @@ export async function baselineCommand(
 
 function usage(): string {
   return `Usage:
-  steward baseline status [--json]
-  steward baseline clear --force [--json]
+  kairn baseline status [--json]
+  kairn baseline clear --force [--json]
 `;
 }

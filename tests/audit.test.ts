@@ -8,9 +8,22 @@ import { addWaiver, pruneExpiredWaivers, readWaivers, renewWaiver } from "../src
 import { baselineCommand } from "../src/commands/baseline.js";
 import { detectorsCommand } from "../src/commands/detectors.js";
 import { waiverCommand } from "../src/commands/waiver.js";
+import {
+  compileContextPacket,
+  compileExecutionBrief,
+  recordRetrievalFeedback
+} from "../src/context.js";
 import { rebuildIndex } from "../src/indexer.js";
+import { judgeIntent, proposeAdr, runDecisionStudy } from "../src/judgment.js";
 import { createProjectLayout } from "../src/layout.js";
 import { formatSarif } from "../src/sarif.js";
+import {
+  generateHandoff,
+  readCurrentSession,
+  reconcileDryRun,
+  recordSessionEntry,
+  startSession
+} from "../src/session.js";
 import { runEvaluation } from "../src/evalHarness.js";
 
 describe("audit", () => {
@@ -36,14 +49,14 @@ describe("audit", () => {
     );
   });
 
-  it("appends .steward to an existing gitignore during init", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "project-steward-"));
+  it("appends .kairn to an existing gitignore during init", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-"));
     await fs.writeFile(path.join(root, ".gitignore"), "dist/\n", "utf8");
 
     await createProjectLayout(root);
 
     await expect(fs.readFile(path.join(root, ".gitignore"), "utf8")).resolves.toBe(
-      "dist/\n.steward/\n"
+      "dist/\n.kairn/\n"
     );
   });
 
@@ -168,7 +181,7 @@ describe("audit", () => {
     execFileSync("git", ["add", "."], { cwd: source });
     execFileSync("git", ["commit", "-m", "fixture"], { cwd: source });
 
-    const clone = await fs.mkdtemp(path.join(os.tmpdir(), "project-steward-shallow-"));
+    const clone = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-shallow-"));
     await fs.rm(clone, { recursive: true, force: true });
     execFileSync("git", ["clone", "--depth=1", `file://${source}`, clone]);
 
@@ -273,13 +286,13 @@ describe("audit", () => {
     const root = await tempProject();
 
     await addWaiver(root, {
-      id: "STW-ACTIVE",
+      id: "KRN-ACTIVE",
       reason: "Still under review.",
       owner: "test",
       expires: "2999-01-01"
     });
     await addWaiver(root, {
-      id: "STW-EXPIRED",
+      id: "KRN-EXPIRED",
       reason: "Expired test waiver.",
       owner: "test",
       expires: "2000-01-01"
@@ -298,25 +311,25 @@ describe("audit", () => {
     const root = await tempProject();
 
     await addWaiver(root, {
-      id: "STW-RENEW",
+      id: "KRN-RENEW",
       reason: "Needs more time.",
       owner: "test",
       expires: "2000-01-01"
     });
     await addWaiver(root, {
-      id: "STW-KEEP",
+      id: "KRN-KEEP",
       reason: "Still active.",
       owner: "test",
       expires: "2999-01-01"
     });
 
-    const renewed = await renewWaiver(root, "STW-RENEW", "2999-02-01");
+    const renewed = await renewWaiver(root, "KRN-RENEW", "2999-02-01");
     const pruned = await pruneExpiredWaivers(root);
     const waivers = await readWaivers(root);
 
     expect(renewed?.expires).toBe("2999-02-01");
     expect(pruned.pruned).toHaveLength(0);
-    expect(waivers.map((waiver) => waiver.id)).toEqual(["STW-KEEP", "STW-RENEW"]);
+    expect(waivers.map((waiver) => waiver.id)).toEqual(["KRN-KEEP", "KRN-RENEW"]);
   });
 
   it("does not create a waiver file for a no-op prune", async () => {
@@ -335,7 +348,7 @@ describe("audit", () => {
 
     const rejected = await waiverCommand(
       root,
-      ["add", "STW-NOTFOUND"],
+      ["add", "KRN-NOTFOUND"],
       new Map([
         ["reason", "Typo test."],
         ["owner", "test"],
@@ -344,7 +357,7 @@ describe("audit", () => {
     );
     const forced = await waiverCommand(
       root,
-      ["add", "STW-NOTFOUND"],
+      ["add", "KRN-NOTFOUND"],
       new Map([
         ["reason", "Offline waiver."],
         ["owner", "test"],
@@ -484,10 +497,98 @@ describe("audit", () => {
     expect(sarif.version).toBe("2.1.0");
     expect(sarif.runs[0].results).toHaveLength(0);
   });
+
+  it("compiles context packets with inclusion reasons and budget accounting", async () => {
+    const root = await tempProject();
+    await fs.mkdir(path.join(root, "src", "auth"), { recursive: true });
+    await fs.writeFile(
+      path.join(root, "src", "auth", "policy.ts"),
+      "export function authorizationPolicyForObjectDownloads() { return true; }\n",
+      "utf8"
+    );
+
+    const packet = await compileContextPacket(
+      root,
+      "Add authorization checks to object downloads",
+      { budgetTokens: 800 }
+    );
+
+    expect(packet.id).toMatch(/^pkt-/);
+    expect(packet.usedTokens).toBeLessThanOrEqual(packet.budgetTokens);
+    expect(packet.items.some((item) => item.path === "src/auth/policy.ts")).toBe(true);
+    expect(packet.items.every((item) => item.reason.length > 0)).toBe(true);
+    expect(packet.exclusions.considered).toBeGreaterThan(packet.items.length);
+  });
+
+  it("builds execution briefs and records retrieval feedback", async () => {
+    const root = await tempProject();
+    const brief = await compileExecutionBrief(
+      root,
+      "Add CLI command for entitlement policy"
+    );
+
+    const feedback = await recordRetrievalFeedback(root, {
+      packetId: brief.packetId,
+      objective: brief.objective,
+      supplied: brief.context.map((item) => item.path),
+      touched: ["src/cli.ts"]
+    });
+
+    expect(brief.requiredEvidence).toContain("CLI output and exit-code coverage.");
+    expect(feedback.touchedWithoutContext).toContain("src/cli.ts");
+    await expect(
+      fs.readFile(
+        path.join(root, ".kairn", "feedback", "retrieval-feedback.jsonl"),
+        "utf8"
+      )
+    ).resolves.toContain(brief.packetId);
+  });
+
+  it("records session ledgers and generates handoff/reconcile dry-runs", async () => {
+    const root = await tempProject();
+    const session = await startSession(root, "Ship context packets");
+    await recordSessionEntry(root, {
+      file: "src/context.ts",
+      command: "npm test",
+      test: "npm test",
+      passed: true,
+      note: "Context packet tests passed."
+    });
+
+    const current = await readCurrentSession(root);
+    const handoff = await generateHandoff(root);
+    const reconcile = await reconcileDryRun(root);
+
+    expect(current?.id).toBe(session.id);
+    expect(handoff.text).toContain("Ship context packets");
+    expect(reconcile.data.documentationUpdates).toContain("docs/architecture.md");
+  });
+
+  it("judges decision-worthy work and can draft proposed ADRs", async () => {
+    const root = await tempProject();
+    const judgment = judgeIntent("Change authentication policy for downloads");
+    const proposed = await proposeAdr(root, {
+      title: "Authentication Policy for Downloads",
+      objective: "Change authentication policy for downloads",
+      write: false
+    });
+
+    expect(judgment.classification).toBe("decision-required");
+    expect(proposed.path).toMatch(/ADR-0001-authentication-policy-for-downloads\.md$/);
+    expect(proposed.text).toContain("Status: Proposed");
+    expect(proposed.text).toContain("PENDING");
+  });
+
+  it("runs the decision study harness against labeled fixtures", async () => {
+    const result = await runDecisionStudy(process.cwd());
+
+    expect(result.fixtureCount).toBeGreaterThan(0);
+    expect(result.passed).toBe(true);
+  });
 });
 
 async function tempProject(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "project-steward-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-"));
   await createProjectLayout(root);
   return root;
 }

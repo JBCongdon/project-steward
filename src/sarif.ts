@@ -39,7 +39,7 @@ interface SarifResult {
   message: { text: string };
   locations?: SarifLocation[];
   partialFingerprints: {
-    stewardFingerprint: string;
+    kairnFingerprint: string;
   };
   properties: Record<string, unknown>;
 }
@@ -70,8 +70,8 @@ export function formatSarif(report: AuditReport): SarifLog {
       {
         tool: {
           driver: {
-            name: "Project Steward",
-            informationUri: "https://github.com/JBCongdon/project-steward",
+            name: "Kairn",
+            informationUri: "https://github.com/JBCongdon/kairn",
             version: VERSION,
             rules
           }
@@ -106,12 +106,12 @@ function ruleFor(ruleId: string, findings: Finding[]): SarifRule {
       text: example?.title ?? ruleId
     },
     fullDescription: {
-      text: example?.explanation ?? `Project Steward detector ${ruleId}.`
+      text: example?.explanation ?? `Kairn detector ${ruleId}.`
     },
     help: {
       text:
         example?.recommendedAction ??
-        "Inspect the Project Steward finding and associated evidence."
+        "Inspect the Kairn finding and associated evidence."
     },
     properties: {
       deterministic: example?.deterministic ?? true,
@@ -133,10 +133,10 @@ function resultFor(
     },
     locations: finding.location ? [locationFor(finding)] : undefined,
     partialFingerprints: {
-      stewardFingerprint: finding.fingerprint
+      kairnFingerprint: finding.fingerprint
     },
     properties: {
-      stewardId: finding.id,
+      kairnId: finding.id,
       confidence: finding.confidence,
       status: finding.status,
       impact: finding.impact,

@@ -14,6 +14,10 @@
 - `src/indexer.ts`: rebuildable local index writer
 - `src/layout.ts`: committed `.project/` layout creation and validation
 - `src/policy.ts`: policy loading and defaults
+- `src/context.ts`: context packet, execution brief, and retrieval feedback logic
+- `src/mcpServer.ts`: read-only MCP stdio server
+- `src/session.ts`: local session ledger, handoff, and reconcile dry-run
+- `src/judgment.ts`: intent judgment, Proposed ADR drafting, and decision-study harness
 
 ## Flows
 
@@ -51,9 +55,24 @@ Normal audit honors repository-specific exclusions from `.project/policy.yaml`. 
 
 `steward rebuild` writes `.steward/index/project-index.json`. The index is a cache, not authority.
 
+### Context and MCP
+
+`steward packet` compiles deterministic task-scoped context with reasons, budget accounting, aggregate exclusions, and nearest misses. `steward brief` derives execution obligations from the packet.
+
+`steward feedback` appends retrieval feedback under `.steward/feedback/`.
+
+`steward mcp` exposes read-only status, audit, context packet, execution brief, and finding explanation tools over stdio.
+
+### Continuity and Judgment
+
+`steward session` records active local work under `.steward/sessions/`. `steward handoff --write` updates `.project/sessions/handoff.md` only when explicitly requested. `steward reconcile --dry-run` reports candidate follow-up without writing files.
+
+`steward judge` classifies objectives as routine, plan-required, or decision-required. `steward adr propose` creates Proposed ADR drafts with unresolved decisions marked `PENDING`.
+
 ## Trust Boundaries
 
 - Project Steward reads source and documentation from the local repository.
 - `.project/` is treated as committed and potentially public.
 - `.steward/` may contain derived local state and must not be committed.
-- Prompt/session capture is not implemented yet; redaction is required before any write path records agent session content.
+- Session ledgers are explicit CLI records, not passive prompt capture.
+- Redaction is required before any future automatic session capture or write path records agent session content.

@@ -18,7 +18,7 @@ export async function detectorsCommand(root: string): Promise<{
     description: detector.description
   })).sort((left, right) => left.id.localeCompare(right.id));
 
-  const lines = ["Project Steward detectors"];
+  const lines = ["Kairn detectors"];
 
   for (const detector of data) {
     lines.push("");

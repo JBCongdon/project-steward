@@ -51,7 +51,7 @@ export const projectGitStateDetector: Detector = {
           ],
           impact:
             "Project memory may exist only locally and disappear for other agents, CI, or collaborators.",
-          recommendedAction: `Commit ${relative} or remove Project Steward from this repository.`,
+          recommendedAction: `Commit ${relative} or remove Kairn from this repository.`,
           reversibility: "trivial",
           requiredApproval: "none",
           explanation:

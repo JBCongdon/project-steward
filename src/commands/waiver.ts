@@ -137,7 +137,7 @@ function validateAdd(
   return {
     ok: true,
     waiver: {
-      ...(id.startsWith("STW-") ? { id } : { fingerprint: id }),
+      ...(id.startsWith("KRN-") ? { id } : { fingerprint: id }),
       reason,
       owner,
       expires
@@ -158,7 +158,7 @@ function formatWaivers(waivers: Waiver[]): string {
     return "No waivers recorded.\n";
   }
 
-  const lines = ["Project Steward waivers"];
+  const lines = ["Kairn waivers"];
 
   for (const waiver of waivers) {
     lines.push("");
@@ -174,10 +174,10 @@ function formatWaivers(waivers: Waiver[]): string {
 
 function usage(): string {
   return `Usage:
-  steward waiver list [--json]
-  steward waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD> [--force]
-  steward waiver renew <finding-id> --expires <YYYY-MM-DD>
-  steward waiver prune [--json]
+  kairn waiver list [--json]
+  kairn waiver add <finding-id> --reason <text> --owner <name> --expires <YYYY-MM-DD> [--force]
+  kairn waiver renew <finding-id> --expires <YYYY-MM-DD>
+  kairn waiver prune [--json]
 `;
 }
 

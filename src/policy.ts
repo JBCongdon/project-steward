@@ -3,9 +3,9 @@ import path from "node:path";
 import YAML from "yaml";
 import { PROJECT_DIR } from "./constants.js";
 import { exists } from "./fsx.js";
-import type { StewardPolicy } from "./types.js";
+import type { KairnPolicy } from "./types.js";
 
-export const DEFAULT_POLICY: StewardPolicy = {
+export const DEFAULT_POLICY: KairnPolicy = {
   exclude_paths: [],
   detectors: {
     "project-layout": true,
@@ -24,7 +24,7 @@ export const DEFAULT_POLICY: StewardPolicy = {
   }
 };
 
-export async function loadPolicy(root: string): Promise<StewardPolicy> {
+export async function loadPolicy(root: string): Promise<KairnPolicy> {
   const policyPath = path.join(root, PROJECT_DIR, "policy.yaml");
 
   if (!(await exists(policyPath))) {
@@ -32,10 +32,10 @@ export async function loadPolicy(root: string): Promise<StewardPolicy> {
   }
 
   const raw = await fs.readFile(policyPath, "utf8");
-  let parsed: Partial<StewardPolicy> | undefined;
+  let parsed: Partial<KairnPolicy> | undefined;
 
   try {
-    parsed = YAML.parse(raw) as Partial<StewardPolicy> | undefined;
+    parsed = YAML.parse(raw) as Partial<KairnPolicy> | undefined;
   } catch {
     return DEFAULT_POLICY;
   }

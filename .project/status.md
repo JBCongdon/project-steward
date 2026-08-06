@@ -4,37 +4,17 @@
 
 ## Active Objectives
 
-- Ship the S0/S1 open-source foundation:
-  - repository layout
-  - TypeScript CLI
-  - deterministic audit findings
-  - baseline ratcheting
-  - CI-ready `check`
-  - finding explanations
-  - tests and contribution docs
-  - public GitHub repository
-  - waiver CLI
-  - ADR quality detector
-  - SARIF export for new findings
-  - active/expired waiver reporting
-  - baseline age reporting
-  - accurate ADR-only decision coverage
-  - plan lifecycle detector
-  - GitHub issue and PR templates
-  - waiver renew/prune commands
-  - policy configuration detector
-  - Markdown heading-anchor validation
-  - waiver target validation with explicit force override
-  - detector catalog command
-  - committed evaluation harness and first fixture
-  - quickstart and CI docs
-  - shallow git clone degraded-mode detection
-  - required project-record git tracking detector
-  - policy-driven path exclusions
-  - baseline status/clear command
-  - `.gitignore` append behavior for `.steward/`
-  - git tracking detector covers baseline and waiver files
-  - v0.1.1 release preparation
+- Ship usable S2-S4 workflows:
+  - context packet compilation
+  - execution briefs
+  - retrieval feedback capture
+  - read-only MCP server
+  - local session ledger
+  - handoff generation
+  - reconcile dry-run
+  - intent judgment classifier
+  - Proposed ADR flow
+  - decision-study harness
 
 ## Known Broken
 
@@ -42,5 +22,7 @@
 - SARIF export is minimal and not yet schema-validated in tests.
 - Evaluation corpus is still small and needs more language/framework fixtures.
 - Package is not published to npm yet.
-- MCP context packet compilation is planned but not implemented.
 - The local index is JSON-only and not yet a graph repository abstraction.
+- Packet recall benchmark has only implementation tests, not a labeled corpus yet.
+- Decision-study corpus is a tiny fixture, not the full S4 labeling study.
+- Second agent adapter documentation is not written yet.

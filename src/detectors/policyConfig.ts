@@ -10,7 +10,7 @@ const POLICY_PATH = ".project/policy.yaml";
 
 export const policyConfigDetector: Detector = {
   id: "policy-config",
-  description: "Checks Project Steward policy configuration for invalid values.",
+  description: "Checks Kairn policy configuration for invalid values.",
   async run({ root }) {
     const absolute = path.join(root, POLICY_PATH);
     if (!(await exists(absolute))) {
@@ -40,7 +40,7 @@ export const policyConfigDetector: Detector = {
             }
           ],
           impact:
-            "Project Steward must fall back to default policy, so configured detector and drift-budget behavior is unavailable.",
+            "Kairn must fall back to default policy, so configured detector and drift-budget behavior is unavailable.",
           recommendedAction: "Fix the YAML syntax in .project/policy.yaml.",
           reversibility: "trivial",
           requiredApproval: "none",
@@ -189,7 +189,7 @@ function invalidValueFinding(message: string, field: string): Finding {
     reversibility: "trivial",
     requiredApproval: "none",
     explanation:
-      "The policy-config detector validates known Project Steward policy fields and reports unsupported or mistyped values as deterministic findings."
+      "The policy-config detector validates known Kairn policy fields and reports unsupported or mistyped values as deterministic findings."
   });
 }
 

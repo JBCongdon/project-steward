@@ -85,7 +85,7 @@ export const adrQualityDetector: Detector = {
             reversibility: "trivial",
             requiredApproval: "none",
             explanation:
-              "The adr-quality detector checks ADR files for the minimal sections Project Steward needs for future retrieval, consequence tracking, and rollback reasoning."
+              "The adr-quality detector checks ADR files for the minimal sections Kairn needs for future retrieval, consequence tracking, and rollback reasoning."
           })
         );
       }

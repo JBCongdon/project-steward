@@ -7,7 +7,7 @@ export async function explainFindingCommand(
   if (!id) {
     return {
       found: false,
-      text: "Usage: steward explain finding <id>\n"
+      text: "Usage: kairn explain finding <id>\n"
     };
   }
 

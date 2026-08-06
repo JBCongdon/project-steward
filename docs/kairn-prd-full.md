@@ -1,4 +1,4 @@
-# Project Steward — Full Product Requirements Document
+# Project Kairn — Full Product Requirements Document
 
 **Version:** 1.1 — complete product definition
 **Status:** Draft
@@ -19,7 +19,7 @@ This specifies **everything worth building**, not a release cut. Sections §8–
 
 ## 1. Summary
 
-Project Steward is a vendor-neutral project intelligence layer for AI-assisted engineering. It maintains a durable, evidence-backed model of what a software project intends, what it decided, what it actually built, and where those three disagree — and it serves task-scoped slices of that model to whichever coding agent is currently working.
+Project Kairn is a vendor-neutral project intelligence layer for AI-assisted engineering. It maintains a durable, evidence-backed model of what a software project intends, what it decided, what it actually built, and where those three disagree — and it serves task-scoped slices of that model to whichever coding agent is currently working.
 
 **Positioning:** *Plan the work. Preserve the decisions. Detect the drift. Restore the project.*
 
@@ -86,7 +86,7 @@ I have no verified quantitative source sizing any of these. They are the product
                │ MCP tool calls / hooks / CLI wrapper     │ context packets
                ▼                                          │ execution briefs
    ┌────────────────────────────────────────────────────────────────────┐
-   │                        STEWARD CORE                                 │
+   │                        KAIRN CORE                                 │
    │                                                                      │
    │  ┌────────────┐  ┌─────────────┐  ┌────────────┐  ┌──────────────┐ │
    │  │  INTENT    │  │   CONTEXT   │  │  EVIDENCE  │  │  DOC POLICY  │ │
@@ -205,7 +205,7 @@ SQLite with typed relationship tables initially — embeddable, zero-ops, fully 
 └── receipts/               # cleanup + reconcile receipts (§12.6)
 ```
 
-`.steward/` (gitignored) holds the SQLite index, worktrees, and caches. Everything in `.project/` is committed and human-editable.
+`.kairn/` (gitignored) holds the SQLite index, worktrees, and caches. Everything in `.project/` is committed and human-editable.
 
 ---
 
@@ -251,10 +251,10 @@ An ADR is created when a decision is architecturally significant · expensive to
 ```
 Prompt implying enduring decision
         ↓
-Steward drafts ADR: Status Proposed
+Kairn drafts ADR: Status Proposed
    context · drivers · options · decision: PENDING
         ↓
-Agent implements; steward observes evidence
+Agent implements; Kairn observes evidence
         ↓
 Reconciler fills: actual decision · alternatives rejected
    code references · performance evidence · consequences
@@ -320,7 +320,7 @@ Explicitly *not* the whole `.project/` directory. Dumping documentation is the f
 
 ### 11.1 Session ledger
 
-While work happens, the steward observes and **accumulates without writing**: files changed · commands run · tests executed and results · dependencies added/removed · plan deviations · assumptions surfaced · work deferred · decisions implied · security/operational consequences.
+While work happens, Kairn observes and **accumulates without writing**: files changed · commands run · tests executed and results · dependencies added/removed · plan deviations · assumptions surfaced · work deferred · decisions implied · security/operational consequences.
 
 Continuous document rewriting is prohibited. Candidates accumulate in the ledger.
 
@@ -359,7 +359,7 @@ Parallel agents and worktrees are now normal and will corrupt shared project sta
 - Per-session ledgers, merged at reconcile — never concurrent writes to `.project/`
 - Advisory leases on plans and ADRs; conflicting concurrent edits surface as explicit conflicts
 - Index writes are transactional; readers never block agents
-- `steward sessions` lists active sessions and their held leases
+- `kairn sessions` lists active sessions and their held leases
 
 ---
 
@@ -367,7 +367,7 @@ Parallel agents and worktrees are now normal and will corrupt shared project sta
 
 ## 12. Audit, tidy, recover
 
-### 12.1 `steward audit` — read-only diagnosis
+### 12.1 `kairn audit` — read-only diagnosis
 
 Changes nothing. Itemized findings across five domains: Architecture · Decisions · Plans · Documentation · Repository.
 
@@ -380,7 +380,7 @@ Full detector catalog in §20, with per-detector precision expectations. Every f
 The first audit on a legacy repo returns hundreds of findings and the team abandons the tool. This is the dominant failure mode for every static-analysis product and it is entirely avoidable.
 
 ```
-steward audit --accept-baseline
+kairn audit --accept-baseline
   → 214 findings recorded as baseline at 71ac09e
   → gate now enforces: no NEW findings
   → backlog burned down voluntarily, or by category
@@ -406,7 +406,7 @@ A finding a user cannot reproduce is a finding they will not act on. Determinist
 
 ### 12.1.3 Explain-the-finding
 
-Every finding is interrogable: `steward explain finding <id>` shows the detector, the exact query or scan performed, the files examined, the evidence found, why that confidence band, and what would change the verdict. A finding whose reasoning is opaque gets ignored — and should be.
+Every finding is interrogable: `kairn explain finding <id>` shows the detector, the exact query or scan performed, the files examined, the evidence found, why that confidence band, and what would change the verdict. A finding whose reasoning is opaque gets ignored — and should be.
 
 ### 12.1.4 Governance coverage *(addition)*
 
@@ -434,7 +434,7 @@ Optional, opt-in adapters for PR discussion, review comments, and linked issues 
 
 **Caveats:** requires host adapters (vendor surfaces, §19 risk applies), carries the same data-sensitivity constraints as §14.4, and must degrade cleanly when unavailable (§25.1). But it is the difference between a retrospective ADR that's useful and one that's a shrug — and it's hard for a pure-repo competitor to match.
 
-### 12.2 `steward tidy` — proposed remediation
+### 12.2 `kairn tidy` — proposed remediation
 
 Never rewrites immediately. Produces three categories:
 
@@ -469,7 +469,7 @@ Discovers current architecture from: source and imports · API definitions · in
 
 **Honest note:** this is the largest single engineering surface in the product and the least likely to work uniformly across polyglot repos. Recommend building it as a **per-source-adapter framework** where each source (imports, k8s manifests, OpenAPI, SQL schema, event config) is an independent, independently-testable extractor with its own confidence rating — rather than one monolithic reconstructor. Ship extractors as they reach precision targets; report partial coverage explicitly rather than implying completeness.
 
-### 12.5 `steward recover` — off-track diagnosis
+### 12.5 `kairn recover` — off-track diagnosis
 
 Answers five questions: intended objective · what was actually implemented · where implementation diverged · which assumptions or blockers caused it · smallest credible route back to coherence.
 
@@ -505,7 +505,7 @@ Every mutating operation runs in an isolated git worktree/branch. Nothing lands 
 cleanup:
   id: tidy-2026-08-05-01
   baseline_commit: 71ac09e
-  worktree: .steward/worktrees/tidy-20260805
+  worktree: .kairn/worktrees/tidy-20260805
   findings: 27
   applied: {automatic: 12, reviewed: 6}
   deferred: 7
@@ -513,7 +513,7 @@ cleanup:
   tests: {passed: 186, failed: 0}
   documentation: {updated: 9, archived: 4}
   decisions: {retrospective_created: 2, superseded: 1}
-  rollback: git branch -D steward/tidy-20260805
+  rollback: git branch -D kairn/tidy-20260805
 ```
 
 Receipts are committed to `.project/receipts/`. They make the agent's work auditable after the fact — which is what makes teams willing to let it write at all.
@@ -569,7 +569,7 @@ drift_budget:
 
 Why this matters: without it, every disagreement with the product's judgment is a bug report or a fork. With it, disagreement is a config change. It is also the artifact that makes the product legible to a platform team evaluating standardization.
 
-### 13.2 `steward check` — CI gate
+### 13.2 `kairn check` — CI gate
 
 Runs in CI on a PR. Emits machine-readable findings and, where supported, inline PR annotations. Fails the build when policy is violated: an ADR-requiring change landed without one, a completion claim lacks required evidence, drift budget exceeded, a constraint was violated.
 
@@ -621,7 +621,7 @@ Two reasons this matters more than it looks. It closes the assumption-register l
 
 Requires only that incidents can be referenced by ID and date; the linkage is derived from the existing graph.
 
-### 14.7 `steward explain` and `steward why`
+### 14.7 `kairn explain` and `kairn why`
 
 `explain <path>` — which decisions, plans, constraints, and trust boundaries govern this file.
 `why <path>:<line>` — decision-level blame: not who changed it, but which decision it exists to satisfy, with citations.
@@ -734,8 +734,8 @@ S9  SCALE ───────────────────────�
 | Mechanism | Role | Stability |
 |---|---|---|
 | **MCP server** | Primary. Context retrieval, explain, status, handoff, reconcile | Best available cross-vendor contract |
-| **Instruction adapters** | Tell each agent to call the steward | Vendor-controlled conventions; expect churn |
-| **CLI wrapper** (`steward run <agent>`) | Fullest observation for agents with weak hook support | Brittle; fallback |
+| **Instruction adapters** | Tell each agent to call Kairn | Vendor-controlled conventions; expect churn |
+| **CLI wrapper** (`kairn run <agent>`) | Fullest observation for agents with weak hook support | Brittle; fallback |
 | **Native hooks** | Best UX where available | Vendor-internal; assume breakage |
 
 Targets: Claude Code and Codex first (enough to prove the cross-agent seam), then Cursor, Copilot, Gemini.
@@ -807,9 +807,9 @@ Decay inputs: commits elapsed since baseline · churn in the evidence files · w
 Documents are rarely wholly human or wholly generated. Every generated region carries explicit boundary markers and a content hash of what was generated.
 
 ```markdown
-<!-- steward:generated id=arch-authz-flow hash=3f2a91c source=extractor:imports -->
+<!-- kairn:generated id=arch-authz-flow hash=3f2a91c source=extractor:imports -->
 ...generated content...
-<!-- steward:end -->
+<!-- kairn:end -->
 ```
 
 **Hard rule:** if the hash does not match, a human edited it — the region is promoted to human-authored and `tidy` will never rewrite it, only flag divergence. Clobbering a paragraph someone wrote carefully is the single fastest way to lose a user permanently, and this is cheap insurance against it.
@@ -839,9 +839,9 @@ Every inferred claim records the model identity and version that produced it, pl
 
 ### 21.7 Invariant: no self-citation
 
-**The steward's own generated output is never weighted as independent evidence for a later inference.**
+**Kairn's own generated output is never weighted as independent evidence for a later inference.**
 
-If a generated ADR feeds a later confidence calculation without a provenance discount, the system begins citing itself and confidence inflates on nothing. This is a hard invariant enforced in the data model — inference edges must discount or exclude any evidence whose `source` is `inferred`, transitively. Any query path that can produce a confidence increase from steward-generated content alone is a bug, and the self-evaluation harness (§17) must include a test for it.
+If a generated ADR feeds a later confidence calculation without a provenance discount, the system begins citing itself and confidence inflates on nothing. This is a hard invariant enforced in the data model — inference edges must discount or exclude any evidence whose `source` is `inferred`, transitively. Any query path that can produce a confidence increase from Kairn-generated content alone is a bug, and the self-evaluation harness (§17) must include a test for it.
 
 ---
 
@@ -921,7 +921,7 @@ Originating prompts, session ledgers, and handoff briefs may contain secrets, cr
 Required before any write path ships:
 - Secret detection on all captured prompt and ledger content, with redaction placeholders that preserve structure
 - Configurable capture policy: full prompt · summary only · classification only · none
-- `.project/` content treated as committed-and-public by default in the threat model; anything sensitive belongs in the gitignored `.steward/` cache or nowhere
+- `.project/` content treated as committed-and-public by default in the threat model; anything sensitive belongs in the gitignored `.kairn/` cache or nowhere
 - Explicit documentation that session capture is on, and how to turn it off
 
 This is a policy that must exist before the first incident, not after.

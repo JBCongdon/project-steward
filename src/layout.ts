@@ -149,7 +149,7 @@ export async function requiredProjectFileStatus(root: string): Promise<{
 
 async function ensureGitignore(root: string): Promise<void> {
   const gitignore = path.join(root, ".gitignore");
-  const line = ".steward/";
+  const line = ".kairn/";
 
   if (!(await exists(gitignore))) {
     await writeIfMissing(gitignore, `${line}\n`);

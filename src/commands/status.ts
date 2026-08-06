@@ -5,7 +5,7 @@ export async function statusCommand(root: string): Promise<string> {
   const newFindings = report.findings.filter((finding) => finding.status === "new");
 
   return [
-    "Project Steward status",
+    "Kairn status",
     `commit: ${report.baselineCommit}`,
     `baseline: ${
       report.baseline

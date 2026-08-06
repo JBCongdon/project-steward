@@ -42,7 +42,7 @@ export interface Detector {
   run(context: DetectorContext): Promise<Finding[]>;
 }
 
-export interface StewardPolicy {
+export interface KairnPolicy {
   exclude_paths: string[];
   detectors: Record<string, boolean>;
   drift_budget: {
@@ -104,4 +104,93 @@ export interface ProjectIndex {
   documents: Array<{ path: string; kind: string }>;
   decisions: Array<{ path: string; status: string }>;
   plans: Array<{ path: string; status: string }>;
+}
+
+export interface ContextPacketItem {
+  path: string;
+  kind: string;
+  score: number;
+  estimatedTokens: number;
+  reason: string;
+  excerpt: string;
+}
+
+export interface ContextPacket {
+  version: 1;
+  id: string;
+  objective: string;
+  root: string;
+  baselineCommit: string;
+  budgetTokens: number;
+  usedTokens: number;
+  items: ContextPacketItem[];
+  droppedByBudget: ContextPacketItem[];
+  exclusions: {
+    considered: number;
+    included: number;
+    droppedByBudget: number;
+    nearestMisses: ContextPacketItem[];
+  };
+}
+
+export interface ExecutionBrief {
+  version: 1;
+  objective: string;
+  packetId: string;
+  baselineCommit: string;
+  context: Array<{ path: string; reason: string }>;
+  requiredEvidence: string[];
+  documentationObligations: string[];
+  prohibitedActions: string[];
+  definitionOfDone: string[];
+}
+
+export interface RetrievalFeedback {
+  version: 1;
+  recordedAt: string;
+  packetId: string;
+  objective?: string;
+  supplied: string[];
+  touched: string[];
+  ignoredSupplied: string[];
+  touchedWithoutContext: string[];
+}
+
+export interface SessionLedger {
+  version: 1;
+  id: string;
+  objective: string;
+  startedAt: string;
+  updatedAt: string;
+  filesChanged: string[];
+  commandsRun: string[];
+  testsRun: Array<{ command: string; passed?: boolean }>;
+  assumptions: string[];
+  deferred: string[];
+  notes: string[];
+  closedAt?: string;
+}
+
+export interface IntentJudgment {
+  version: 1;
+  objective: string;
+  classification: "routine" | "plan-required" | "decision-required";
+  confidence: Confidence;
+  reasons: string[];
+  recommendedAction: string;
+  adrRecommended: boolean;
+}
+
+export interface DecisionStudyResult {
+  version: 1;
+  fixtureCount: number;
+  truePositives: number;
+  falsePositives: number;
+  falseNegatives: number;
+  trueNegatives: number;
+  precision: number;
+  recall: number;
+  f1: number;
+  naiveF1: number;
+  passed: boolean;
 }

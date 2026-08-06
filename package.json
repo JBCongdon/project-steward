@@ -1,18 +1,18 @@
 {
-  "name": "project-steward",
-  "version": "0.1.1",
+  "name": "@jbcongdon/kairn",
+  "version": "0.2.0",
   "description": "A vendor-neutral project intelligence layer for AI-assisted engineering.",
   "type": "module",
-  "homepage": "https://github.com/JBCongdon/project-steward#readme",
+  "homepage": "https://github.com/JBCongdon/kairn#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JBCongdon/project-steward.git"
+    "url": "git+https://github.com/JBCongdon/kairn.git"
   },
   "bugs": {
-    "url": "https://github.com/JBCongdon/project-steward/issues"
+    "url": "https://github.com/JBCongdon/kairn/issues"
   },
   "bin": {
-    "steward": "./dist/cli.js"
+    "kairn": "./dist/cli.js"
   },
   "files": [
     "dist",
@@ -25,6 +25,7 @@
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
     "eval": "node dist/cli.js eval",
+    "study": "node dist/cli.js study",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "npm run build"
@@ -44,11 +45,16 @@
     "node": ">=20"
   },
   "dependencies": {
-    "yaml": "^2.8.0"
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "yaml": "^2.8.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

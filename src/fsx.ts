@@ -4,7 +4,7 @@ import path from "node:path";
 
 const DEFAULT_IGNORES = new Set([
   ".git",
-  ".steward",
+  ".kairn",
   "node_modules",
   "dist",
   "coverage"

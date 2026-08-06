@@ -1,6 +1,6 @@
 # Policy
 
-Project Steward reads `.project/policy.yaml`.
+Kairn reads `.project/policy.yaml`.
 
 Current fields:
 

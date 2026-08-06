@@ -1,7 +1,7 @@
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 export const PROJECT_DIR = ".project";
-export const STEWARD_DIR = ".steward";
+export const KAIRN_DIR = ".kairn";
 
 export const REQUIRED_PROJECT_FILES = [
   "project.md",
@@ -18,4 +18,4 @@ export const REQUIRED_PROJECT_FILES = [
 ];
 
 export const GENERATED_MARKER =
-  "<!-- This file was created by Project Steward. Human edits are welcome. -->";
+  "<!-- This file was created by Kairn. Human edits are welcome. -->";

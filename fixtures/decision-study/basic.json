@@ -1,0 +1,22 @@
+[
+  {
+    "objective": "Change the authentication policy for object downloads.",
+    "changedFiles": ["src/auth/policy.ts", "src/api/download.ts"],
+    "decisionRequired": true
+  },
+  {
+    "objective": "Fix a typo in the quickstart guide.",
+    "changedFiles": ["docs/quickstart.md"],
+    "decisionRequired": false
+  },
+  {
+    "objective": "Replace the storage index format and migration path.",
+    "changedFiles": ["src/indexer.ts", "src/storage/sqlite.ts", "docs/architecture.md"],
+    "decisionRequired": true
+  },
+  {
+    "objective": "Add CLI help text for the status command.",
+    "changedFiles": ["src/cli.ts", "README.md"],
+    "decisionRequired": false
+  }
+]
