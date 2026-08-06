@@ -1,7 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 import { createFinding } from "../finding.js";
 import { exists, toPosix, walkFiles } from "../fsx.js";
+import { getGitInfo } from "../git.js";
+import { loadPolicy } from "../policy.js";
 import type { Detector, Finding } from "../types.js";
 
 const PLAN_DIRECTORIES = [
@@ -15,6 +18,9 @@ export const planStateDetector: Detector = {
   description: "Checks plan directory and Status field consistency.",
   async run({ root }) {
     const findings: Finding[] = [];
+    const policy = await loadPolicy(root);
+    const git = getGitInfo(root);
+    const canUseGitHistory = git.isGitRepository && !git.isShallow;
 
     for (const planDirectory of PLAN_DIRECTORIES) {
       const absoluteDirectory = path.join(root, planDirectory.relative);
@@ -66,6 +72,17 @@ export const planStateDetector: Detector = {
             })
           );
         }
+
+        if (planDirectory.expectedStatus === "active" && canUseGitHistory) {
+          const staleFinding = staleActivePlanFinding(
+            root,
+            displayPath,
+            policy.plans.stale_after_days
+          );
+          if (staleFinding) {
+            findings.push(staleFinding);
+          }
+        }
       }
     }
 
@@ -105,4 +122,96 @@ function readStatus(contents: string): string | undefined {
 
 function normalizeStatus(status: string): string {
   return status.trim().toLowerCase().split(/\s+/)[0];
+}
+
+function staleActivePlanFinding(
+  root: string,
+  displayPath: string,
+  staleAfterDays: number
+): Finding | undefined {
+  const lastCommit = lastCommitDate(root, displayPath);
+  const referenceCommit = latestCommitDate(root);
+
+  if (!referenceCommit) {
+    return undefined;
+  }
+
+  if (!lastCommit) {
+    return createFinding({
+      detectorId: "plan-state",
+      title: "Active plan has no git history",
+      message: `${displayPath} is active but has no commits in git history.`,
+      location: { path: displayPath },
+      confidence: "medium",
+      deterministic: true,
+      source: "git-derived",
+      evidence: [
+        {
+          kind: "git",
+          path: displayPath,
+          detail: "git log did not report a commit for this active plan file."
+        }
+      ],
+      impact:
+        "Other agents and collaborators may not have durable evidence for the active work plan.",
+      recommendedAction:
+        "Commit the active plan, or move it out of active plans if it is not real current work.",
+      reversibility: "trivial",
+      requiredApproval: "none",
+      explanation:
+        "The plan-state detector checks active plan files against git history when full history is available."
+    });
+  }
+
+  const ageDays = Math.floor(
+    (referenceCommit.getTime() - lastCommit.getTime()) / 86_400_000
+  );
+  if (ageDays <= staleAfterDays) {
+    return undefined;
+  }
+
+  return createFinding({
+    detectorId: "plan-state",
+    title: "Active plan appears stale",
+    message: `${displayPath} is active but has no plan-file commits within the policy threshold.`,
+    location: { path: displayPath },
+    confidence: "medium",
+    deterministic: true,
+    source: "git-derived",
+    evidence: [
+      {
+        kind: "git",
+        path: displayPath,
+        detail: `Last plan-file commit was ${lastCommit.toISOString()}; latest repository commit was ${referenceCommit.toISOString()}; policy threshold is ${staleAfterDays} day(s).`
+      }
+    ],
+    impact:
+      "Agents may continue to treat abandoned or dormant work as active project direction.",
+    recommendedAction:
+      "Update the active plan with current evidence, move it to completed/abandoned, or adjust plans.stale_after_days in policy.",
+    reversibility: "trivial",
+    requiredApproval: "none",
+    explanation:
+      "The plan-state detector uses git log for active plan files when full history is available. It reports stale active plans using the policy plans.stale_after_days threshold."
+  });
+}
+
+function lastCommitDate(root: string, displayPath: string): Date | undefined {
+  return gitCommitDate(root, ["log", "-1", "--format=%cI", "--", displayPath]);
+}
+
+function latestCommitDate(root: string): Date | undefined {
+  return gitCommitDate(root, ["log", "-1", "--format=%cI"]);
+}
+
+function gitCommitDate(root: string, args: string[]): Date | undefined {
+  try {
+    const raw = execFileSync("git", ["-C", root, ...args], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+    return raw ? new Date(raw) : undefined;
+  } catch {
+    return undefined;
+  }
 }

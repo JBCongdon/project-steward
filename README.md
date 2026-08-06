@@ -11,11 +11,11 @@ GitHub: https://github.com/JBCongdon/kairn
 Current deterministic detectors:
 
 - required `.project/` layout
-- git tracking for required `.project/` records
+- git tracking and dirty-state checks for required `.project/` records
 - policy configuration
 - relative Markdown links and heading anchors
 - ADR quality
-- plan lifecycle state
+- plan lifecycle state and stale active-plan history
 
 ## Why this exists
 
@@ -133,6 +133,8 @@ kairn audit --sarif > kairn.sarif
 ```
 
 See [docs/ci.md](docs/ci.md) for CI usage.
+
+See [docs/release.md](docs/release.md) for release and npm publishing notes.
 
 ## Product definition
 

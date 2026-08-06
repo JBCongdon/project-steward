@@ -246,6 +246,28 @@ describe("audit", () => {
     expect(messages).toContain(".project/waivers.json exists but is not tracked by git.");
   });
 
+  it("reports tracked project records with uncommitted changes", async () => {
+    const root = await tempProject();
+    execFileSync("git", ["init", "-b", "main"], { cwd: root });
+    execFileSync("git", ["config", "user.name", "Test"], { cwd: root });
+    execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: root });
+    execFileSync("git", ["config", "commit.gpgsign", "false"], { cwd: root });
+    execFileSync("git", ["add", ".project"], { cwd: root });
+    execFileSync("git", ["commit", "-m", "project records"], { cwd: root });
+    await fs.appendFile(
+      path.join(root, ".project", "project.md"),
+      "\n## Local-only note\n\nNot committed yet.\n",
+      "utf8"
+    );
+
+    const report = await runAudit(root);
+    const messages = report.findings
+      .filter((finding) => finding.detectorId === "project-git-state")
+      .map((finding) => finding.message);
+
+    expect(messages).toContain(".project/project.md has uncommitted changes.");
+  });
+
   it("does not count decisions/index.md as an ADR", async () => {
     const root = await tempProject();
     const report = await runAudit(root);
@@ -422,6 +444,55 @@ describe("audit", () => {
     expect(planFindings.map((finding) => finding.message)).toContain(
       ".project/plans/completed/missing-status.md does not declare a Status field."
     );
+  });
+
+  it("reports active plans with stale git history", async () => {
+    const root = await tempProject();
+    execFileSync("git", ["init", "-b", "main"], { cwd: root });
+    execFileSync("git", ["config", "user.name", "Test"], { cwd: root });
+    execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: root });
+    execFileSync("git", ["config", "commit.gpgsign", "false"], { cwd: root });
+    await fs.writeFile(
+      path.join(root, ".project", "policy.yaml"),
+      "plans:\n  stale_after_days: 7\n",
+      "utf8"
+    );
+    await fs.writeFile(
+      path.join(root, ".project", "plans", "active", "stale-work.md"),
+      "# Stale Work\n\nStatus: Active\n",
+      "utf8"
+    );
+    execFileSync("git", ["add", ".project"], { cwd: root });
+    execFileSync("git", ["commit", "-m", "old active plan"], {
+      cwd: root,
+      env: {
+        ...process.env,
+        GIT_AUTHOR_DATE: "2000-01-01T00:00:00Z",
+        GIT_COMMITTER_DATE: "2000-01-01T00:00:00Z"
+      }
+    });
+    await fs.writeFile(path.join(root, "README.md"), "# Fixture\n", "utf8");
+    execFileSync("git", ["add", "README.md"], { cwd: root });
+    execFileSync("git", ["commit", "-m", "recent repository work"], {
+      cwd: root,
+      env: {
+        ...process.env,
+        GIT_AUTHOR_DATE: "2000-02-01T00:00:00Z",
+        GIT_COMMITTER_DATE: "2000-02-01T00:00:00Z"
+      }
+    });
+
+    const report = await runAudit(root);
+    const stalePlan = report.findings.find(
+      (finding) =>
+        finding.detectorId === "plan-state" &&
+        finding.title === "Active plan appears stale"
+    );
+
+    expect(stalePlan?.message).toContain(
+      ".project/plans/active/stale-work.md is active but has no plan-file commits"
+    );
+    expect(stalePlan?.confidence).toBe("medium");
   });
 
   it("reports invalid policy YAML without crashing audit", async () => {

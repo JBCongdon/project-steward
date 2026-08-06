@@ -21,9 +21,12 @@ Build usable S2 through S4 workflows: context packets and MCP access, session co
 - [x] Add Proposed ADR flow
 - [x] Add decision-study harness and first fixture
 - [x] Add packet benchmark with labeled must-include sets
+- [x] Add initial git-correlation detectors for stale active plans and dirty `.project` records
+- [x] Add tag-triggered release verification workflow
 - [ ] Run decision labeling study beyond toy fixtures
 - [ ] Add second agent adapter documentation
 - [ ] Expand packet benchmark beyond the first Kairn-local cases
+- [ ] Add deeper git-correlation detectors for README/CLI mismatch and ADR references to moved/deleted files
 
 ## Required Evidence
 
@@ -32,6 +35,9 @@ Build usable S2 through S4 workflows: context packets and MCP access, session co
 - `npm run build`
 - `npm run benchmark:packets`
 - `npm run eval`
+- `npm run study`
+- `node dist/cli.js audit`
+- `node dist/cli.js check`
 - `kairn packet <objective>`
 - `kairn brief <objective>`
 - `kairn mcp` smoke test through an MCP client

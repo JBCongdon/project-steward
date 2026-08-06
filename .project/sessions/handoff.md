@@ -43,10 +43,14 @@ Completed:
 - Intent judgment command
 - Proposed ADR drafting
 - Decision-study harness and first fixture
+- Packet benchmark and first fixture
+- SARIF schema validation
+- Initial git-correlation detectors for stale active plans and dirty `.project` records
+- Tag-triggered release verification workflow
 
 Next:
-- Add release automation and npm publishing decision
-- Add git-correlation detectors
+- Configure `NPM_TOKEN` and publish the first npm package
+- Add deeper git-correlation detectors for README/CLI mismatch and ADR references to moved/deleted files
 - Expand packet benchmark beyond the first Kairn-local cases
 - Expand decision-study corpus beyond the first fixture
 - Add second agent adapter documentation

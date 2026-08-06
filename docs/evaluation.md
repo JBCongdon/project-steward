@@ -29,6 +29,8 @@ Current fixtures:
 - `basic-drift`: intentionally broken project records with expected findings
 - `clean-project`: valid records with zero expected findings
 
+The test suite also covers git-correlation behavior for stale active plans and committed `.project` records with local uncommitted changes.
+
 ## Packet Benchmark
 
 S2 packet recall fixtures live under `fixtures/packet-benchmark`.

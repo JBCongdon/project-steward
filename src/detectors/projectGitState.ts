@@ -29,40 +29,72 @@ export const projectGitStateDetector: Detector = {
         continue;
       }
 
-      if (isTracked(root, relative)) {
+      if (!isTracked(root, relative)) {
+        findings.push(untrackedProjectRecordFinding(relative));
         continue;
       }
 
-      findings.push(
-        createFinding({
-          detectorId: "project-git-state",
-          title: "Project record is not tracked by git",
-          message: `${relative} exists but is not tracked by git.`,
-          location: { path: relative },
-          confidence: "high",
-          deterministic: true,
-          source: "git-derived",
-          evidence: [
-            {
-              kind: "git",
-              path: relative,
-              detail: "git ls-files did not report this required project record as tracked."
-            }
-          ],
-          impact:
-            "Project memory may exist only locally and disappear for other agents, CI, or collaborators.",
-          recommendedAction: `Commit ${relative} or remove Kairn from this repository.`,
-          reversibility: "trivial",
-          requiredApproval: "none",
-          explanation:
-            "The project-git-state detector checks required .project records with git ls-files. Existing records that are not tracked are high-confidence because .project is intended to be committed project memory."
-        })
-      );
+      if (hasUncommittedChanges(root, relative)) {
+        findings.push(dirtyProjectRecordFinding(root, relative));
+      }
     }
 
     return findings;
   }
 };
+
+function untrackedProjectRecordFinding(relative: string): Finding {
+  return createFinding({
+    detectorId: "project-git-state",
+    title: "Project record is not tracked by git",
+    message: `${relative} exists but is not tracked by git.`,
+    location: { path: relative },
+    confidence: "high",
+    deterministic: true,
+    source: "git-derived",
+    evidence: [
+      {
+        kind: "git",
+        path: relative,
+        detail: "git ls-files did not report this required project record as tracked."
+      }
+    ],
+    impact:
+      "Project memory may exist only locally and disappear for other agents, CI, or collaborators.",
+    recommendedAction: `Commit ${relative} or remove Kairn from this repository.`,
+    reversibility: "trivial",
+    requiredApproval: "none",
+    explanation:
+      "The project-git-state detector checks required .project records with git ls-files. Existing records that are not tracked are high-confidence because .project is intended to be committed project memory."
+  });
+}
+
+function dirtyProjectRecordFinding(root: string, relative: string): Finding {
+  return createFinding({
+    detectorId: "project-git-state",
+    title: "Project record has uncommitted changes",
+    message: `${relative} has uncommitted changes.`,
+    location: { path: relative },
+    confidence: "medium",
+    deterministic: true,
+    source: "git-derived",
+    evidence: [
+      {
+        kind: "git",
+        path: relative,
+        detail: `git status --porcelain reports: ${porcelainStatus(root, relative)}`
+      }
+    ],
+    impact:
+      "Local project memory differs from the committed version that other agents, CI, or collaborators will read.",
+    recommendedAction:
+      "Commit the project record change, revert it, or move incomplete notes into a local session ledger.",
+    reversibility: "trivial",
+    requiredApproval: "none",
+    explanation:
+      "The project-git-state detector checks committed .project records with git status. Dirty project records are reported because .project is intended to be shared, durable project memory."
+  });
+}
 
 function isTracked(root: string, relativePath: string): boolean {
   try {
@@ -72,5 +104,20 @@ function isTracked(root: string, relativePath: string): boolean {
     return true;
   } catch {
     return false;
+  }
+}
+
+function hasUncommittedChanges(root: string, relativePath: string): boolean {
+  return porcelainStatus(root, relativePath).length > 0;
+}
+
+function porcelainStatus(root: string, relativePath: string): string {
+  try {
+    return execFileSync("git", ["-C", root, "status", "--porcelain", "--", relativePath], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+  } catch {
+    return "";
   }
 }
