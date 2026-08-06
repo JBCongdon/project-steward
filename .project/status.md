@@ -23,7 +23,7 @@
 
 - Deeper git-correlation detectors beyond stale active plans and dirty `.project` records are not implemented yet.
 - Evaluation corpus is still small and needs more language/framework fixtures.
-- Package is not published to npm yet; release automation skips publish until `NPM_TOKEN` is configured.
+- Package is not published to npm yet; the GitHub secret exists, but npm rejected `@jbcongdon/kairn@0.2.2` publishing with a registry 404, so npm scope/token permissions still need correction.
 - The local index is JSON-only and not yet a graph repository abstraction.
 - Packet recall benchmark has only the first Kairn-local labeled cases.
 - Decision-study corpus is a tiny fixture, not the full S4 labeling study.

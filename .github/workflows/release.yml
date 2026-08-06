@@ -8,6 +8,12 @@ on:
     types:
       - published
   workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish to npm when NPM_TOKEN is configured."
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   publish:
@@ -33,8 +39,8 @@ jobs:
       - run: npm run study
       - run: npm pack --dry-run
       - name: Publish to npm
-        if: env.NODE_AUTH_TOKEN != ''
+        if: ${{ env.NODE_AUTH_TOKEN != '' && (github.event_name != 'workflow_dispatch' || inputs.publish == true) }}
         run: npm publish --access public
       - name: Skip npm publish
-        if: env.NODE_AUTH_TOKEN == ''
-        run: echo "NPM_TOKEN is not configured; package was not published."
+        if: ${{ env.NODE_AUTH_TOKEN == '' || (github.event_name == 'workflow_dispatch' && inputs.publish != true) }}
+        run: echo "npm publish was skipped for this run."

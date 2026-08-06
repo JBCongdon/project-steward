@@ -12,7 +12,7 @@
     "url": "https://github.com/JBCongdon/kairn/issues"
   },
   "bin": {
-    "kairn": "./dist/cli.js"
+    "kairn": "dist/cli.js"
   },
   "files": [
     "dist",
