@@ -18,7 +18,7 @@ npm pack --dry-run
 
 ## GitHub Releases
 
-Create a `v*` tag or GitHub release after the release gate passes. The release workflow repeats the local gate on GitHub Actions.
+Create a `v*` tag or GitHub release after the release gate passes. The release workflow repeats the local gate on GitHub Actions for tag pushes, published GitHub releases, and manual dispatches.
 
 ## npm Publishing
 
