@@ -1,4 +1,4 @@
-<!-- This file was created by Project Steward. Human edits are welcome. -->
+<!-- This file was created by Kairn. Human edits are welcome. -->
 
 # S2-S4 Context, Continuity, and Judgment
 
@@ -20,20 +20,22 @@ Build usable S2 through S4 workflows: context packets and MCP access, session co
 - [x] Add intent judgment classifier
 - [x] Add Proposed ADR flow
 - [x] Add decision-study harness and first fixture
-- [ ] Expand packet benchmark with labeled must-include sets
+- [x] Add packet benchmark with labeled must-include sets
 - [ ] Run decision labeling study beyond toy fixtures
 - [ ] Add second agent adapter documentation
+- [ ] Expand packet benchmark beyond the first Kairn-local cases
 
 ## Required Evidence
 
 - `npm run check`
 - `npm test`
 - `npm run build`
+- `npm run benchmark:packets`
 - `npm run eval`
-- `steward packet <objective>`
-- `steward brief <objective>`
-- `steward mcp` smoke test through an MCP client
-- `steward session start --objective <text>`
-- `steward reconcile --dry-run`
-- `steward judge <objective>`
-- `steward study`
+- `kairn packet <objective>`
+- `kairn brief <objective>`
+- `kairn mcp` smoke test through an MCP client
+- `kairn session start --objective <text>`
+- `kairn reconcile --dry-run`
+- `kairn judge <objective>`
+- `kairn study`

@@ -1,11 +1,11 @@
-<!-- This file was created by Project Steward. Human edits are welcome. -->
+<!-- This file was created by Kairn. Human edits are welcome. -->
 
 # Constraints
 
 - Audit detectors must be read-only.
 - Deterministic findings must use stable fingerprints.
 - `check` must fail when coverage is degraded.
-- `.steward/` must remain gitignored.
+- `.kairn/` must remain gitignored.
 - JSON output is the primary machine contract.
 - Model-assisted findings must not gate CI by default when introduced.
 - Waivers must require a reason, owner, and expiry.
@@ -23,4 +23,4 @@
 - Required `.project/` records must be tracked by git when git is available.
 - Local baseline and waiver files must be tracked by git when present.
 - Clearing a baseline must require an explicit force flag.
-- `steward init` must ensure `.steward/` is gitignored without removing existing `.gitignore` entries.
+- `kairn init` must ensure `.kairn/` is gitignored without removing existing `.gitignore` entries.

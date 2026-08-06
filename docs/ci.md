@@ -37,6 +37,10 @@ SARIF output includes only new, unwaived findings. Baselined and waived findings
 For this repository's own CI, run the detector and judgment harnesses after build:
 
 ```sh
+npm test
+npm run benchmark:packets
 npm run eval
 npm run study
 ```
+
+The test suite includes SARIF 2.1.0 schema validation for generated SARIF output. The packet benchmark gates labeled context-packet recall.

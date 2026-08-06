@@ -194,3 +194,27 @@ export interface DecisionStudyResult {
   naiveF1: number;
   passed: boolean;
 }
+
+export interface PacketBenchmarkCaseResult {
+  name: string;
+  objective: string;
+  packetId: string;
+  required: string[];
+  included: string[];
+  missing: string[];
+  itemCount: number;
+  recall: number;
+  passed: boolean;
+}
+
+export interface PacketBenchmarkResult {
+  version: 1;
+  caseCount: number;
+  totalRequired: number;
+  totalIncludedRequired: number;
+  recall: number;
+  averagePacketItems: number;
+  targetRecall: number;
+  passed: boolean;
+  cases: PacketBenchmarkCaseResult[];
+}

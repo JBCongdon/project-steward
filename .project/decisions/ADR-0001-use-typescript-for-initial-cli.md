@@ -1,4 +1,4 @@
-<!-- This file was created by Project Steward. Human edits are welcome. -->
+<!-- This file was created by Kairn. Human edits are welcome. -->
 
 # ADR-0001: Use TypeScript for the initial CLI
 
@@ -6,7 +6,7 @@ Status: Accepted
 
 ## Context
 
-Project Steward needs an open-source foundation that can provide immediate local value, support JSON-first command output, and later expose an MCP server.
+Kairn needs an open-source foundation that can provide immediate local value, support JSON-first command output, and later expose an MCP server.
 
 ## Decision
 

@@ -2,6 +2,7 @@
 import path from "node:path";
 import { runAudit, checkDriftBudget } from "./audit.js";
 import { baselineCommand } from "./commands/baseline.js";
+import { benchmarkCommand } from "./commands/benchmark.js";
 import { packetCommand, briefCommand, feedbackCommand } from "./commands/context.js";
 import { detectorsCommand } from "./commands/detectors.js";
 import { doctorCommand } from "./commands/doctor.js";
@@ -58,6 +59,17 @@ async function main(): Promise<void> {
 
     case "baseline": {
       const result = await baselineCommand(parsed.root, parsed.positionals, parsed.flags);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "benchmark": {
+      const result = await benchmarkCommand(parsed.root, parsed.positionals, parsed.values);
       if (parsed.flags.has("json")) {
         printJson(result.data);
       } else {
@@ -301,7 +313,8 @@ function parseArgs(args: string[]): ParsedArgs {
     "supplied",
     "test",
     "title",
-    "touched"
+    "touched",
+    "target-recall"
   ]);
 
   for (let index = 0; index < args.length; index += 1) {
@@ -366,6 +379,7 @@ Usage:
   kairn doctor [--json]
   kairn baseline status [--json]
   kairn baseline clear --force [--json]
+  kairn benchmark packets [--fixtures <path>] [--target-recall <0-1>] [--json]
   kairn detectors [--json]
   kairn eval [--json] [--fixtures <path>]
   kairn mcp

@@ -1,4 +1,4 @@
-<!-- This file was created by Project Steward. Human edits are welcome. -->
+<!-- This file was created by Kairn. Human edits are welcome. -->
 
 # Assumptions
 

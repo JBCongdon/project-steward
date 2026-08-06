@@ -1,10 +1,10 @@
-<!-- This file was created by Project Steward. Human edits are welcome. -->
+<!-- This file was created by Kairn. Human edits are welcome. -->
 
 # Project
 
 ## Purpose
 
-Project Steward is a vendor-neutral project intelligence layer for AI-assisted engineering.
+Kairn is a vendor-neutral project intelligence layer for AI-assisted engineering.
 
 It maintains durable, evidence-backed records of project intent, decisions, plans, evidence, and drift so coding agents and human maintainers can work from the same project memory.
 
@@ -21,7 +21,7 @@ It maintains durable, evidence-backed records of project intent, decisions, plan
 - MCP integration is planned after read-only audit value is proven.
 - Autonomous code cleanup is out of scope until the read-only trust gates are met.
 - `.project/` is committed and human-editable.
-- `.steward/` is a rebuildable local cache and must remain gitignored.
+- `.kairn/` is a rebuildable local cache and must remain gitignored.
 
 ## Principles
 

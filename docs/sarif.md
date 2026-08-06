@@ -19,4 +19,6 @@ Each result includes:
 
 Run-level invocation properties include degraded coverage, coverage counts, baseline summary, and waiver counts.
 
+Generated SARIF is validated in tests against the bundled SARIF 2.1.0 JSON Schema from `@microsoft/sarif-multitool-ts`.
+
 The current exporter is intentionally minimal. It should grow only around concrete consumer requirements.

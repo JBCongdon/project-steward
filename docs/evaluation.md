@@ -12,6 +12,7 @@ npm run eval
 or:
 
 ```sh
+kairn benchmark packets
 kairn eval
 kairn eval --json
 kairn eval --fixtures fixtures/evaluation
@@ -27,6 +28,19 @@ Current fixtures:
 
 - `basic-drift`: intentionally broken project records with expected findings
 - `clean-project`: valid records with zero expected findings
+
+## Packet Benchmark
+
+S2 packet recall fixtures live under `fixtures/packet-benchmark`.
+
+Run:
+
+```sh
+npm run benchmark:packets
+kairn benchmark packets --json
+```
+
+Each case declares an objective and a labeled `mustInclude` path set. The benchmark compiles a normal context packet and reports recall, average packet size, and missing required paths.
 
 ## Decision Study
 

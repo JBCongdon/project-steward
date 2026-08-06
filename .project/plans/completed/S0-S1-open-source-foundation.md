@@ -1,4 +1,4 @@
-<!-- This file was created by Project Steward. Human edits are welcome. -->
+<!-- This file was created by Kairn. Human edits are welcome. -->
 
 # S0/S1 Open-Source Foundation
 
@@ -6,7 +6,7 @@ Status: Completed
 
 ## Objective
 
-Turn the Project Steward PRD into a public open-source repository with a runnable read-only foundation.
+Turn the Kairn PRD into a public open-source repository with a runnable read-only foundation.
 
 ## Tasks
 
@@ -37,7 +37,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - [x] Add required project-record git tracking detector
 - [x] Add policy-driven path exclusions
 - [x] Add baseline status/clear command
-- [x] Ensure init appends `.steward/` to existing `.gitignore`
+- [x] Ensure init appends `.kairn/` to existing `.gitignore`
 - [x] Add clean-project evaluation fixture
 - [x] Extend git tracking detector to baseline and waiver files
 
@@ -47,7 +47,7 @@ Turn the Project Steward PRD into a public open-source repository with a runnabl
 - `npm test`
 - `npm run build`
 - `npm run eval`
-- `steward audit`
-- `gh repo create project-steward --public --source=. --remote=origin --push`
-- `steward audit --sarif`
-- `steward check --sarif`
+- `kairn audit`
+- `gh repo create project-kairn --public --source=. --remote=origin --push`
+- `kairn audit --sarif`
+- `kairn check --sarif`

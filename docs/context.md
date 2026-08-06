@@ -11,6 +11,16 @@ kairn brief "Add authorization checks to object downloads"
 
 Use `--budget <tokens>` to cap the packet. Use `--json` for agent integrations.
 
+## Packet Benchmark
+
+Run labeled packet recall checks with:
+
+```sh
+kairn benchmark packets
+```
+
+Fixtures live under `fixtures/packet-benchmark`. Each case names an objective and the paths a useful packet must include.
+
 ## Retrieval Feedback
 
 After a task, record which supplied paths were used and which touched files were missing from the packet:

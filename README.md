@@ -50,6 +50,7 @@ See [docs/quickstart.md](docs/quickstart.md) for first-run usage on another repo
 kairn init
 kairn doctor
 kairn baseline status
+kairn benchmark packets
 kairn detectors
 kairn eval
 kairn study
@@ -109,6 +110,7 @@ Detector behavior is checked against committed fixtures:
 
 ```sh
 npm run build
+npm run benchmark:packets
 npm run eval
 ```
 

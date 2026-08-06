@@ -1,0 +1,29 @@
+[
+  {
+    "name": "context feedback workflow",
+    "objective": "Improve retrieval feedback capture for context packets",
+    "budgetTokens": 1800,
+    "mustInclude": [
+      "src/context.ts",
+      "docs/context.md"
+    ]
+  },
+  {
+    "name": "judgment adr workflow",
+    "objective": "Draft proposed ADRs when authentication policy changes require a decision",
+    "budgetTokens": 1800,
+    "mustInclude": [
+      "src/judgment.ts",
+      "docs/judgment.md"
+    ]
+  },
+  {
+    "name": "session continuity workflow",
+    "objective": "Record session ledger entries and generate a handoff for continuity",
+    "budgetTokens": 1800,
+    "mustInclude": [
+      "src/session.ts",
+      "docs/continuity.md"
+    ]
+  }
+]

@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
 import { addWaiver, pruneExpiredWaivers, readWaivers, renewWaiver } from "../src/baseline.js";
@@ -16,6 +18,7 @@ import {
 import { rebuildIndex } from "../src/indexer.js";
 import { judgeIntent, proposeAdr, runDecisionStudy } from "../src/judgment.js";
 import { createProjectLayout } from "../src/layout.js";
+import { runPacketBenchmark } from "../src/packetBenchmark.js";
 import { formatSarif } from "../src/sarif.js";
 import {
   generateHandoff,
@@ -496,6 +499,21 @@ describe("audit", () => {
 
     expect(sarif.version).toBe("2.1.0");
     expect(sarif.runs[0].results).toHaveLength(0);
+    await expectValidSarif(sarif);
+  });
+
+  it("exports SARIF with findings that conforms to the SARIF 2.1.0 schema", async () => {
+    const root = await tempProject();
+    await fs.writeFile(
+      path.join(root, "README.md"),
+      "See [missing docs](docs/missing.md).\n",
+      "utf8"
+    );
+
+    const sarif = formatSarif(await runAudit(root));
+
+    expect(sarif.runs[0].results).toHaveLength(1);
+    await expectValidSarif(sarif);
   });
 
   it("compiles context packets with inclusion reasons and budget accounting", async () => {
@@ -585,10 +603,39 @@ describe("audit", () => {
     expect(result.fixtureCount).toBeGreaterThan(0);
     expect(result.passed).toBe(true);
   });
+
+  it("runs the packet benchmark against labeled must-include fixtures", async () => {
+    const result = await runPacketBenchmark(process.cwd());
+
+    expect(result.caseCount).toBeGreaterThan(0);
+    expect(result.passed).toBe(true);
+    expect(result.recall).toBe(1);
+  });
 });
 
 async function tempProject(): Promise<string> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-"));
   await createProjectLayout(root);
   return root;
+}
+
+async function expectValidSarif(sarif: unknown): Promise<void> {
+  const schemaPath = path.join(
+    process.cwd(),
+    "node_modules",
+    "@microsoft",
+    "sarif-multitool-ts",
+    "assets",
+    "sarif-2.1.0.schema.json"
+  );
+  const schema = JSON.parse(await fs.readFile(schemaPath, "utf8")) as object;
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  const validate = ajv.compile(schema);
+  const valid = validate(sarif);
+
+  expect(
+    valid,
+    JSON.stringify(validate.errors ?? [], null, 2)
+  ).toBe(true);
 }

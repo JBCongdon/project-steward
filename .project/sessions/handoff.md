@@ -1,4 +1,4 @@
-<!-- This file was created by Project Steward. Human edits are welcome. -->
+<!-- This file was created by Kairn. Human edits are welcome. -->
 
 # Handoff
 
@@ -28,7 +28,7 @@ Completed:
 - Required project-record git tracking detector
 - Policy-driven path exclusions
 - Baseline status/clear command
-- `.gitignore` append behavior for `.steward/`
+- `.gitignore` append behavior for `.kairn/`
 - Clean-project evaluation fixture
 - Git tracking detector covers baseline and waiver files
 - Basic tests
@@ -46,8 +46,7 @@ Completed:
 
 Next:
 - Add release automation and npm publishing decision
-- Add schema validation for SARIF output
 - Add git-correlation detectors
-- Expand packet benchmark with labeled must-include sets
+- Expand packet benchmark beyond the first Kairn-local cases
 - Expand decision-study corpus beyond the first fixture
 - Add second agent adapter documentation
