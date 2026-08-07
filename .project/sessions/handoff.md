@@ -48,10 +48,11 @@ Completed:
 - Initial git-correlation detectors for stale active plans and dirty `.project` records
 - Tag-triggered release verification workflow
 - Local dogfood smoke test script
+- Agent adapters installed by `kairn init`
 
 Next:
 - Configure `NPM_TOKEN` and publish the first npm package
 - Add deeper git-correlation detectors for README/CLI mismatch and ADR references to moved/deleted files
 - Expand packet benchmark beyond the first Kairn-local cases
 - Expand decision-study corpus beyond the first fixture
-- Add second agent adapter documentation
+- Verify generated adapters against current vendor CLI behavior

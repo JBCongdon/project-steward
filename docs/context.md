@@ -40,3 +40,30 @@ kairn mcp
 ```
 
 The server exposes read-only tools for status, audit, finding explanation, context packets, and execution briefs. It also exposes a rebuilt project index resource.
+
+## Agent Adapters
+
+`kairn init` installs common instruction adapters so CLI agents can discover Kairn from the repository itself:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `GEMINI.md`
+- `.github/copilot-instructions.md`
+- `.cursor/rules/kairn.mdc`
+- `.codex/config.toml`
+
+Run this to retrofit or refresh an existing repository:
+
+```sh
+kairn agents install
+```
+
+The instruction adapters tell agents to read `.project/`, use Kairn MCP tools when available, fall back to the Kairn CLI, run `kairn brief` before broad edits, run `kairn judge` for decision-worthy work, and run `kairn reconcile --dry-run` plus `kairn audit` or `kairn check` before claiming completion.
+
+The Codex config registers the local stdio MCP server:
+
+```toml
+[mcp_servers.kairn]
+command = "kairn"
+args = ["mcp", "--root", "."]
+```

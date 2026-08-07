@@ -1,0 +1,5 @@
+# KAIRN:BEGIN
+[mcp_servers.kairn]
+command = "kairn"
+args = ["mcp", "--root", "."]
+# KAIRN:END

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import path from "node:path";
 import { runAudit, checkDriftBudget } from "./audit.js";
+import { agentsCommand } from "./commands/agents.js";
 import { baselineCommand } from "./commands/baseline.js";
 import { benchmarkCommand } from "./commands/benchmark.js";
 import { packetCommand, briefCommand, feedbackCommand } from "./commands/context.js";
@@ -59,6 +60,17 @@ async function main(): Promise<void> {
 
     case "baseline": {
       const result = await baselineCommand(parsed.root, parsed.positionals, parsed.flags);
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
+    case "agents": {
+      const result = await agentsCommand(parsed.root, parsed.positionals);
       if (parsed.flags.has("json")) {
         printJson(result.data);
       } else {
@@ -377,6 +389,7 @@ function helpText(): string {
 Usage:
   kairn init [--root <path>]
   kairn doctor [--json]
+  kairn agents install|status [--json]
   kairn baseline status [--json]
   kairn baseline clear --force [--json]
   kairn benchmark packets [--fixtures <path>] [--target-recall <0-1>] [--json]

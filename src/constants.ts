@@ -1,4 +1,4 @@
-export const VERSION = "0.2.2";
+export const VERSION = "0.2.3";
 
 export const PROJECT_DIR = ".project";
 export const KAIRN_DIR = ".kairn";

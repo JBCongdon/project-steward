@@ -7,6 +7,7 @@ import addFormats from "ajv-formats";
 import { describe, expect, it } from "vitest";
 import { runAudit, checkDriftBudget } from "../src/audit.js";
 import { addWaiver, pruneExpiredWaivers, readWaivers, renewWaiver } from "../src/baseline.js";
+import { initCommand } from "../src/commands/init.js";
 import { baselineCommand } from "../src/commands/baseline.js";
 import { detectorsCommand } from "../src/commands/detectors.js";
 import { waiverCommand } from "../src/commands/waiver.js";
@@ -18,6 +19,7 @@ import {
 import { rebuildIndex } from "../src/indexer.js";
 import { judgeIntent, proposeAdr, runDecisionStudy } from "../src/judgment.js";
 import { createProjectLayout } from "../src/layout.js";
+import { installAgentAdapters } from "../src/agentAdapters.js";
 import { runPacketBenchmark } from "../src/packetBenchmark.js";
 import { formatSarif } from "../src/sarif.js";
 import {
@@ -60,6 +62,40 @@ describe("audit", () => {
 
     await expect(fs.readFile(path.join(root, ".gitignore"), "utf8")).resolves.toBe(
       "dist/\n.kairn/\n"
+    );
+  });
+
+  it("installs agent adapters during init", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-init-"));
+
+    const result = await initCommand(root);
+
+    await expect(fs.readFile(path.join(root, "AGENTS.md"), "utf8")).resolves.toContain(
+      "Kairn Agent Instructions"
+    );
+    await expect(fs.readFile(path.join(root, "CLAUDE.md"), "utf8")).resolves.toContain(
+      "kairn brief"
+    );
+    await expect(
+      fs.readFile(path.join(root, ".github", "copilot-instructions.md"), "utf8")
+    ).resolves.toContain("kairn reconcile --dry-run");
+    await expect(
+      fs.readFile(path.join(root, ".cursor", "rules", "kairn.mdc"), "utf8")
+    ).resolves.toContain("alwaysApply: true");
+    await expect(
+      fs.readFile(path.join(root, ".codex", "config.toml"), "utf8")
+    ).resolves.toContain("[mcp_servers.kairn]");
+    expect(result).toContain("Kairn agent adapters");
+  });
+
+  it("reports missing agent adapters", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-adapters-"));
+    await createProjectLayout(root);
+
+    const report = await runAudit(root);
+
+    expect(report.findings.map((finding) => finding.message)).toContain(
+      "AGENTS.md is missing the Kairn agent adapter."
     );
   });
 
@@ -687,6 +723,7 @@ describe("audit", () => {
 async function tempProject(): Promise<string> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-"));
   await createProjectLayout(root);
+  await installAgentAdapters(root);
   return root;
 }
 

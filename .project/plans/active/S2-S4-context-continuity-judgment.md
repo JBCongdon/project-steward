@@ -23,6 +23,7 @@ Build usable S2 through S4 workflows: context packets and MCP access, session co
 - [x] Add packet benchmark with labeled must-include sets
 - [x] Add initial git-correlation detectors for stale active plans and dirty `.project` records
 - [x] Add tag-triggered release verification workflow
+- [x] Install agent instruction adapters from `kairn init`
 - [ ] Run decision labeling study beyond toy fixtures
 - [ ] Add second agent adapter documentation
 - [ ] Expand packet benchmark beyond the first Kairn-local cases

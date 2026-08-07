@@ -32,7 +32,7 @@ function smokeCurrentRepo() {
   expectOutput("version", ["version"], `${packageJson.version}\n`);
   run("doctor", ["doctor"]);
   const detectors = runJson("detectors", ["detectors", "--json"]);
-  assert(detectors.length >= 6, "expected detector catalog to include core detectors");
+  assert(detectors.length >= 7, "expected detector catalog to include core detectors");
 
   const audit = runJson("audit", ["audit", "--json"]);
   assert(Array.isArray(audit.findings), "audit JSON should include findings array");
@@ -78,6 +78,7 @@ function smokeInitializedRepo() {
   git(root, ["commit", "-m", "initial repository"]);
 
   run("init", ["init", "--root", root]);
+  assertAgentAdapters(root);
 
   const untrackedAudit = runJson("audit detects untracked project records", [
     "audit",
@@ -167,6 +168,24 @@ function smokeInitializedRepo() {
     "--json"
   ]);
   assert(judgment.classification, "judge should return a classification");
+}
+
+function assertAgentAdapters(root) {
+  const adapterPaths = [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".github/copilot-instructions.md",
+    ".cursor/rules/kairn.mdc",
+    ".codex/config.toml"
+  ];
+
+  for (const adapterPath of adapterPaths) {
+    assert(
+      fs.existsSync(path.join(root, adapterPath)),
+      `expected kairn init to install ${adapterPath}`
+    );
+  }
 }
 
 function runJson(label, args) {

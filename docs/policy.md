@@ -10,6 +10,7 @@ exclude_paths:
 detectors:
   project-layout: true
   project-git-state: true
+  agent-adapters: true
   policy-config: true
   markdown-links: true
   adr-quality: true

@@ -37,6 +37,7 @@ The index is a cache, not authority. The committed `.project/` directory and the
 
 - `project-layout`: required committed `.project/` files
 - `project-git-state`: required `.project` records and local governance files tracked by git
+- `agent-adapters`: common agent instruction files and Codex MCP config
 - `policy-config`: policy YAML and supported field validation
 - `markdown-links`: relative Markdown file targets and heading anchors
 - `adr-quality`: ADR status and required sections

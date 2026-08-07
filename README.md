@@ -12,6 +12,7 @@ Current deterministic detectors:
 
 - required `.project/` layout
 - git tracking and dirty-state checks for required `.project/` records
+- agent instruction adapters and Codex MCP config
 - policy configuration
 - relative Markdown links and heading anchors
 - ADR quality
@@ -49,6 +50,8 @@ See [docs/quickstart.md](docs/quickstart.md) for first-run usage on another repo
 ```sh
 kairn init
 kairn doctor
+kairn agents install
+kairn agents status
 kairn baseline status
 kairn benchmark packets
 kairn detectors
@@ -82,6 +85,8 @@ kairn waiver prune
 All command output supports `--json` where useful.
 
 Use `kairn detectors` to inspect available detectors and whether policy currently enables them.
+
+`kairn init` installs common agent instruction adapters (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, Copilot instructions, Cursor rules, and Codex MCP config). Run `kairn agents install` to refresh those adapters in an existing repository.
 
 Use `kairn eval` to run the committed detector evaluation fixtures.
 
@@ -119,7 +124,7 @@ See [docs/evaluation.md](docs/evaluation.md).
 
 ## Context and Continuity
 
-Use [docs/context.md](docs/context.md) for context packets, execution briefs, retrieval feedback, and MCP setup.
+Use [docs/context.md](docs/context.md) for context packets, execution briefs, retrieval feedback, MCP setup, and agent adapter behavior.
 
 Use [docs/continuity.md](docs/continuity.md) for session ledgers, handoffs, and reconcile dry-runs.
 

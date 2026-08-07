@@ -1,0 +1,7 @@
+# KAIRN:BEGIN
+[mcp_servers.kairn]
+command = "kairn"
+args = ["mcp", "--root", "."]
+startup_timeout_sec = 10
+tool_timeout_sec = 60
+# KAIRN:END

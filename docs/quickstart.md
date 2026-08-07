@@ -18,6 +18,21 @@ kairn audit
 kairn check
 ```
 
+`kairn init` also installs agent adapters so local CLI agents can discover Kairn without bespoke prompting:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `GEMINI.md`
+- `.github/copilot-instructions.md`
+- `.cursor/rules/kairn.mdc`
+- `.codex/config.toml`
+
+For an already initialized repository, refresh them with:
+
+```sh
+kairn agents install
+```
+
 For a legacy repository with existing findings:
 
 ```sh
