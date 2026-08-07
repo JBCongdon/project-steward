@@ -19,7 +19,7 @@
   - initial git-correlation detectors
   - tag-triggered release verification
   - local dogfood smoke test
-  - agent instruction adapters installed by `kairn init`
+  - install-once global agent setup with optional repository-local adapters
 
 ## Known Broken
 
@@ -29,4 +29,4 @@
 - The local index is JSON-only and not yet a graph repository abstraction.
 - Packet recall benchmark has only the first Kairn-local labeled cases.
 - Decision-study corpus is a tiny fixture, not the full S4 labeling study.
-- Agent adapter docs cover first common CLI surfaces; deeper adapter verification across vendor versions remains.
+- Global agent setup covers first common CLI surfaces; deeper adapter verification across vendor versions remains.

@@ -1,6 +1,6 @@
 {
   "name": "@jbcongdon/kairn",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A vendor-neutral project intelligence layer for AI-assisted engineering.",
   "type": "module",
   "homepage": "https://github.com/JBCongdon/kairn#readme",

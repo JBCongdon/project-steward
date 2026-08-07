@@ -4,7 +4,7 @@ import type { Detector, Finding } from "../types.js";
 
 export const agentAdaptersDetector: Detector = {
   id: "agent-adapters",
-  description: "Checks that agent instruction adapters are installed.",
+  description: "Checks optional repository agent instruction adapters.",
   async run({ root }) {
     const status = await agentAdapterStatus(root);
     const findings: Finding[] = [];
@@ -31,12 +31,13 @@ export const agentAdaptersDetector: Detector = {
             }
           ],
           impact:
-            "CLI agents may not discover Kairn automatically and may skip project memory, context packets, reconcile, and audit.",
-          recommendedAction: "Run kairn agents install and commit the adapter files.",
+            "Repository-scoped agents that do not read global Kairn setup may skip project memory, context packets, reconcile, and audit.",
+          recommendedAction:
+            "Run kairn agents install and commit the adapter files, or disable the agent-adapters detector if global setup is sufficient.",
           reversibility: "trivial",
           requiredApproval: "none",
           explanation:
-            "The agent-adapters detector checks the instruction files and Codex MCP config that kairn init installs for common CLI agents."
+            "The agent-adapters detector is an opt-in compatibility check for teams that intentionally commit repository-local agent instruction files."
         })
       );
     }

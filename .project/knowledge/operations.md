@@ -6,7 +6,8 @@
 - CI runs the committed evaluation harness.
 - CI runs the decision-study harness.
 - Local dogfooding runs with `npm run test:local`.
-- `kairn init` installs agent instruction adapters and Codex project MCP config so future CLI-agent sessions discover Kairn from the repo.
+- `kairn setup` installs global agent instructions and Codex MCP config once per machine so supported CLI-agent sessions discover Kairn across repositories.
+- `kairn init` creates committed `.project/` memory for a repository; repository-local agent adapters are optional compatibility files installed with `kairn agents install`.
 - Tag-triggered release verification runs typecheck, tests, build, benchmarks, eval, study, and `npm pack --dry-run`.
 - The package is not published to npm yet; the GitHub `NPM_TOKEN` exists, but npm rejected `@jbcongdon/kairn@0.2.2` publishing with a registry 404. Verify npm username/scope ownership and token permissions.
 - GitHub issues should be used for detector proposals, roadmap slices, and precision bugs.

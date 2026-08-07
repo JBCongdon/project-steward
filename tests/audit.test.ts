@@ -19,7 +19,12 @@ import {
 import { rebuildIndex } from "../src/indexer.js";
 import { judgeIntent, proposeAdr, runDecisionStudy } from "../src/judgment.js";
 import { createProjectLayout } from "../src/layout.js";
-import { installAgentAdapters } from "../src/agentAdapters.js";
+import {
+  agentAdapterStatus,
+  globalAgentAdapterStatus,
+  installAgentAdapters,
+  installGlobalAgentAdapters
+} from "../src/agentAdapters.js";
 import { runPacketBenchmark } from "../src/packetBenchmark.js";
 import { formatSarif } from "../src/sarif.js";
 import {
@@ -65,32 +70,71 @@ describe("audit", () => {
     );
   });
 
-  it("installs agent adapters during init", async () => {
+  it("initializes project memory without requiring agent adapters", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-init-"));
 
     const result = await initCommand(root);
 
+    await expect(fs.readFile(path.join(root, ".project", "project.md"), "utf8")).resolves.toContain(
+      "Project"
+    );
+    await expect(fs.stat(path.join(root, "AGENTS.md"))).rejects.toThrow();
+    expect(result).toContain("Kairn initialized.");
+    expect(result).not.toContain("agent adapters");
+  });
+
+  it("installs global agent adapters for supported CLI agents", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-global-adapters-"));
+    const options = {
+      codexHome: path.join(root, "codex"),
+      claudeHome: path.join(root, "claude"),
+      geminiHome: path.join(root, "gemini")
+    };
+
+    const result = await installGlobalAgentAdapters(options);
+    const status = await globalAgentAdapterStatus(options);
+
+    await expect(
+      fs.readFile(path.join(options.codexHome, "AGENTS.md"), "utf8")
+    ).resolves.toContain("global project intelligence layer");
+    await expect(
+      fs.readFile(path.join(options.codexHome, "config.toml"), "utf8")
+    ).resolves.toContain('args = ["mcp"]');
+    await expect(
+      fs.readFile(path.join(options.claudeHome, "CLAUDE.md"), "utf8")
+    ).resolves.toContain("kairn brief");
+    await expect(
+      fs.readFile(path.join(options.geminiHome, "GEMINI.md"), "utf8")
+    ).resolves.toContain("Kairn Agent Instructions");
+    expect(result.scope).toBe("global");
+    expect(result.created).toHaveLength(4);
+    expect(status.every((adapter) => adapter.installed)).toBe(true);
+  });
+
+  it("installs repository adapters when explicitly requested", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-adapters-"));
+
+    const result = await installAgentAdapters(root);
+    const status = await agentAdapterStatus(root);
+
     await expect(fs.readFile(path.join(root, "AGENTS.md"), "utf8")).resolves.toContain(
       "Kairn Agent Instructions"
     );
-    await expect(fs.readFile(path.join(root, "CLAUDE.md"), "utf8")).resolves.toContain(
-      "kairn brief"
-    );
-    await expect(
-      fs.readFile(path.join(root, ".github", "copilot-instructions.md"), "utf8")
-    ).resolves.toContain("kairn reconcile --dry-run");
-    await expect(
-      fs.readFile(path.join(root, ".cursor", "rules", "kairn.mdc"), "utf8")
-    ).resolves.toContain("alwaysApply: true");
     await expect(
       fs.readFile(path.join(root, ".codex", "config.toml"), "utf8")
-    ).resolves.toContain("[mcp_servers.kairn]");
-    expect(result).toContain("Kairn agent adapters");
+    ).resolves.toContain('args = ["mcp", "--root", "."]');
+    expect(result.scope).toBe("repository");
+    expect(status.every((adapter) => adapter.installed)).toBe(true);
   });
 
-  it("reports missing agent adapters", async () => {
+  it("reports missing repository agent adapters only when policy enables them", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-adapters-"));
     await createProjectLayout(root);
+    await fs.writeFile(
+      path.join(root, ".project", "policy.yaml"),
+      "detectors:\n  agent-adapters: true\n",
+      "utf8"
+    );
 
     const report = await runAudit(root);
 
@@ -723,7 +767,6 @@ describe("audit", () => {
 async function tempProject(): Promise<string> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "kairn-"));
   await createProjectLayout(root);
-  await installAgentAdapters(root);
   return root;
 }
 

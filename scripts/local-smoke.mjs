@@ -68,7 +68,28 @@ function smokeInitializedRepo() {
   section("throwaway initialized repository");
 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "kairn-local-smoke-"));
+  const agentHome = fs.mkdtempSync(path.join(os.tmpdir(), "kairn-local-smoke-agents-"));
   tempRoots.push(root);
+  tempRoots.push(agentHome);
+  const agentEnv = {
+    CODEX_HOME: path.join(agentHome, "codex"),
+    CLAUDE_HOME: path.join(agentHome, "claude"),
+    GEMINI_HOME: path.join(agentHome, "gemini")
+  };
+
+  run("global setup", ["setup"], { env: agentEnv });
+  assertGlobalAdapters(agentEnv);
+  const globalStatus = runJson("global agent status", [
+    "agents",
+    "status",
+    "--global",
+    "--json"
+  ], { env: agentEnv });
+  assert(
+    globalStatus.every((adapter) => adapter.installed),
+    "global agent status should report installed adapters"
+  );
+
   fs.writeFileSync(path.join(root, "README.md"), "# Local Smoke\n", "utf8");
   git(root, ["init", "-b", "main"]);
   git(root, ["config", "user.name", "Kairn Smoke"]);
@@ -78,6 +99,8 @@ function smokeInitializedRepo() {
   git(root, ["commit", "-m", "initial repository"]);
 
   run("init", ["init", "--root", root]);
+  assertNoAgentAdapters(root);
+  run("repository adapters install", ["agents", "install", "--root", root]);
   assertAgentAdapters(root);
 
   const untrackedAudit = runJson("audit detects untracked project records", [
@@ -188,8 +211,30 @@ function assertAgentAdapters(root) {
   }
 }
 
-function runJson(label, args) {
-  return JSON.parse(run(label, args).stdout);
+function assertNoAgentAdapters(root) {
+  for (const adapterPath of ["AGENTS.md", "CLAUDE.md", "GEMINI.md", ".codex/config.toml"]) {
+    assert(
+      !fs.existsSync(path.join(root, adapterPath)),
+      `expected kairn init not to install ${adapterPath}`
+    );
+  }
+}
+
+function assertGlobalAdapters(env) {
+  const adapterPaths = [
+    path.join(env.CODEX_HOME, "AGENTS.md"),
+    path.join(env.CODEX_HOME, "config.toml"),
+    path.join(env.CLAUDE_HOME, "CLAUDE.md"),
+    path.join(env.GEMINI_HOME, "GEMINI.md")
+  ];
+
+  for (const adapterPath of adapterPaths) {
+    assert(fs.existsSync(adapterPath), `expected kairn setup to install ${adapterPath}`);
+  }
+}
+
+function runJson(label, args, options = {}) {
+  return JSON.parse(run(label, args, options).stdout);
 }
 
 function expectOutput(label, args, expected) {
@@ -200,6 +245,7 @@ function expectOutput(label, args, expected) {
 function run(label, args, options = {}) {
   const result = spawnSync(process.execPath, [cli, ...args], {
     cwd: repoRoot,
+    env: { ...process.env, ...(options.env ?? {}) },
     encoding: "utf8"
   });
 

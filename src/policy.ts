@@ -10,7 +10,7 @@ export const DEFAULT_POLICY: KairnPolicy = {
   detectors: {
     "project-layout": true,
     "project-git-state": true,
-    "agent-adapters": true,
+    "agent-adapters": false,
     "policy-config": true,
     "markdown-links": true,
     "adr-quality": true,

@@ -43,27 +43,31 @@ The server exposes read-only tools for status, audit, finding explanation, conte
 
 ## Agent Adapters
 
-`kairn init` installs common instruction adapters so CLI agents can discover Kairn from the repository itself:
+`kairn setup` installs global instruction adapters so supported CLI agents can discover Kairn across repositories:
 
-- `AGENTS.md`
-- `CLAUDE.md`
-- `GEMINI.md`
-- `.github/copilot-instructions.md`
-- `.cursor/rules/kairn.mdc`
-- `.codex/config.toml`
+- `~/.codex/AGENTS.md`
+- `~/.codex/config.toml`
+- `~/.claude/CLAUDE.md`
+- `~/.gemini/GEMINI.md`
 
-Run this to retrofit or refresh an existing repository:
+Run this to install or refresh global setup:
+
+```sh
+kairn agents install --global
+```
+
+Repository-local adapters are optional and remain available for projects that intentionally want committed agent instructions:
 
 ```sh
 kairn agents install
 ```
 
-The instruction adapters tell agents to read `.project/`, use Kairn MCP tools when available, fall back to the Kairn CLI, run `kairn brief` before broad edits, run `kairn judge` for decision-worthy work, and run `kairn reconcile --dry-run` plus `kairn audit` or `kairn check` before claiming completion.
+The instruction adapters tell agents to use Kairn MCP tools when available, fall back to the Kairn CLI, run `kairn brief` before broad edits, read `.project/` when durable memory exists, run `kairn judge` for decision-worthy work, and run `kairn reconcile --dry-run` plus `kairn audit` or `kairn check` before claiming completion.
 
-The Codex config registers the local stdio MCP server:
+The global Codex config registers the local stdio MCP server:
 
 ```toml
 [mcp_servers.kairn]
 command = "kairn"
-args = ["mcp", "--root", "."]
+args = ["mcp"]
 ```

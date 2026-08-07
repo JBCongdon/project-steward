@@ -10,7 +10,23 @@ npm run build
 npm link
 ```
 
-In a repository you want to inspect:
+Install Kairn into supported local CLI agent surfaces once per machine:
+
+```sh
+kairn setup
+```
+
+That writes global Kairn instructions for Codex, Claude Code, and Gemini CLI, plus global Codex MCP config. New CLI agent sessions can then discover Kairn in any repository without project-by-project adapter setup.
+
+In any repository, Kairn can be used read-only:
+
+```sh
+kairn status
+kairn brief "Add authorization checks to downloads"
+kairn audit
+```
+
+Initialize a repository only when you want committed durable project memory:
 
 ```sh
 kairn init
@@ -18,19 +34,13 @@ kairn audit
 kairn check
 ```
 
-`kairn init` also installs agent adapters so local CLI agents can discover Kairn without bespoke prompting:
+`kairn init` creates `.project/` records. It does not install agent adapters into the repository.
 
-- `AGENTS.md`
-- `CLAUDE.md`
-- `GEMINI.md`
-- `.github/copilot-instructions.md`
-- `.cursor/rules/kairn.mdc`
-- `.codex/config.toml`
-
-For an already initialized repository, refresh them with:
+For a project that intentionally wants committed local instruction files for hosted tools or teammates without global setup:
 
 ```sh
 kairn agents install
+kairn agents status
 ```
 
 For a legacy repository with existing findings:
@@ -55,13 +65,6 @@ kairn explain finding <id>
 kairn waiver add <id> --reason "temporary exception" --owner "you" --expires 2026-12-31
 ```
 
-For agent work, start with a scoped context packet and brief:
-
-```sh
-kairn packet "Add authorization checks to downloads"
-kairn brief "Add authorization checks to downloads"
-```
-
 Track a work session and prepare handoff:
 
 ```sh
@@ -81,5 +84,3 @@ kairn adr propose --title "Authentication Policy for Downloads" --objective "Cha
 Tune policy in `.project/policy.yaml`, including detector enablement, drift budgets, and `exclude_paths`.
 
 Kairn treats `.project/` as committed project memory. Review those files before committing them.
-
-`kairn audit` reports required `.project/` records, baselines, and waivers that exist locally but are not tracked by git.

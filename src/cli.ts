@@ -47,6 +47,17 @@ async function main(): Promise<void> {
       return;
     }
 
+    case "setup": {
+      const result = await agentsCommand(parsed.root, ["install"], new Set([...parsed.flags, "global"]));
+      if (parsed.flags.has("json")) {
+        printJson(result.data);
+      } else {
+        process.stdout.write(result.text);
+      }
+      process.exitCode = result.ok ? 0 : 1;
+      return;
+    }
+
     case "doctor": {
       const result = await doctorCommand(parsed.root);
       if (parsed.flags.has("json")) {
@@ -70,7 +81,7 @@ async function main(): Promise<void> {
     }
 
     case "agents": {
-      const result = await agentsCommand(parsed.root, parsed.positionals);
+      const result = await agentsCommand(parsed.root, parsed.positionals, parsed.flags);
       if (parsed.flags.has("json")) {
         printJson(result.data);
       } else {
@@ -387,9 +398,10 @@ function helpText(): string {
   return `Kairn ${VERSION}
 
 Usage:
+  kairn setup [--json]
   kairn init [--root <path>]
   kairn doctor [--json]
-  kairn agents install|status [--json]
+  kairn agents install|status [--global] [--json]
   kairn baseline status [--json]
   kairn baseline clear --force [--json]
   kairn benchmark packets [--fixtures <path>] [--target-recall <0-1>] [--json]

@@ -1,17 +1,23 @@
 import {
   agentAdapterStatus,
   formatAgentAdapterInstall,
-  installAgentAdapters
+  globalAgentAdapterStatus,
+  installAgentAdapters,
+  installGlobalAgentAdapters
 } from "../agentAdapters.js";
 
 export async function agentsCommand(
   root: string,
-  positionals: string[]
+  positionals: string[],
+  flags = new Set<string>()
 ): Promise<{ ok: boolean; text: string; data: unknown }> {
   const [subcommand = "status"] = positionals;
+  const global = flags.has("global");
 
   if (subcommand === "install") {
-    const result = await installAgentAdapters(root);
+    const result = global
+      ? await installGlobalAgentAdapters()
+      : await installAgentAdapters(root);
     return {
       ok: true,
       text: formatAgentAdapterInstall(result),
@@ -20,11 +26,16 @@ export async function agentsCommand(
   }
 
   if (subcommand === "status") {
-    const status = await agentAdapterStatus(root);
+    const status = global
+      ? await globalAgentAdapterStatus()
+      : await agentAdapterStatus(root);
+    const label = global
+      ? "Kairn global agent integration"
+      : "Kairn repository agent adapters";
     return {
       ok: true,
       text: [
-        "Kairn agent adapters",
+        label,
         ...status.map(
           (adapter) =>
             `${adapter.installed ? "ok" : "missing"} ${adapter.path} (${adapter.description})`
@@ -36,7 +47,7 @@ export async function agentsCommand(
 
   return {
     ok: false,
-    text: "Usage: kairn agents install|status [--json]\n",
+    text: "Usage: kairn agents install|status [--global] [--json]\n",
     data: { error: "unknown-agents-command" }
   };
 }

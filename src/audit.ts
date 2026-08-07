@@ -13,7 +13,7 @@ import { countMarkdownFiles } from "./detectors/markdownLinks.js";
 import { exists, walkFiles } from "./fsx.js";
 import { getGitInfo } from "./git.js";
 import { requiredProjectFileStatus } from "./layout.js";
-import { loadPolicy } from "./policy.js";
+import { DEFAULT_POLICY, loadPolicy } from "./policy.js";
 import { isAdrPath } from "./records.js";
 import type { AuditReport, Finding } from "./types.js";
 
@@ -32,7 +32,9 @@ export async function runAudit(
 
   for (const detector of DETECTORS) {
     if (policy.detectors[detector.id] === false) {
-      degraded.push(`Detector ${detector.id} is disabled by policy.`);
+      if (DEFAULT_POLICY.detectors[detector.id] !== false) {
+        degraded.push(`Detector ${detector.id} is disabled by policy.`);
+      }
       continue;
     }
 

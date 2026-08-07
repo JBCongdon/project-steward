@@ -12,7 +12,7 @@ Current deterministic detectors:
 
 - required `.project/` layout
 - git tracking and dirty-state checks for required `.project/` records
-- agent instruction adapters and Codex MCP config
+- optional repository agent instruction adapters and Codex MCP config
 - policy configuration
 - relative Markdown links and heading anchors
 - ADR quality
@@ -48,8 +48,11 @@ See [docs/quickstart.md](docs/quickstart.md) for first-run usage on another repo
 ## Current commands
 
 ```sh
+kairn setup
 kairn init
 kairn doctor
+kairn agents install --global
+kairn agents status --global
 kairn agents install
 kairn agents status
 kairn baseline status
@@ -86,7 +89,7 @@ All command output supports `--json` where useful.
 
 Use `kairn detectors` to inspect available detectors and whether policy currently enables them.
 
-`kairn init` installs common agent instruction adapters (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, Copilot instructions, Cursor rules, and Codex MCP config). Run `kairn agents install` to refresh those adapters in an existing repository.
+`kairn setup` installs global Kairn instructions for supported CLI agents and global Codex MCP config. Run it once per machine. `kairn init` only creates committed `.project/` memory for a repository. `kairn agents install` remains available for projects that intentionally want committed repository-local adapters.
 
 Use `kairn eval` to run the committed detector evaluation fixtures.
 
